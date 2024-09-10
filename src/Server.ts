@@ -11,9 +11,9 @@ import serverOptions from './serverOptions.ts';
  * const server = new Server({
  *   hostname: 'localhost',
  *   port: 3000,
- *   documentRoot: './public',
  *   directoryIndex: 'index.html',
  *   bundle: true,
+ *   documentRoot: './public',
  * });
  *
  * server.start();
