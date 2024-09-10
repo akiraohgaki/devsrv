@@ -120,6 +120,7 @@ export default class Server {
         status,
         headers: {
           'Content-Type': contentType,
+          'Cross-Origin-Resource-Policy': 'cross-origin',
           'Pragma': 'no-cache',
           'Cache-Control': 'no-cache',
         },
