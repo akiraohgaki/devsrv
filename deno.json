@@ -1,0 +1,87 @@
+{
+  "name": "@akiraohgaki/devsrv",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./mod.ts",
+    "./server": "./server.ts"
+  },
+  "publish": {
+    "include": [
+      "src/**/*.ts",
+      "mod.ts",
+      "server.ts",
+      "deno.json",
+      "README.md",
+      "LICENSE"
+    ]
+  },
+  "compilerOptions": {
+    "lib": [
+      "deno.ns",
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable"
+    ],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "lint": {
+    "include": [
+      "src/",
+      "tests/",
+      "*.ts"
+    ],
+    "rules": {
+      "tags": [
+        "recommended"
+      ],
+      "include": [
+        "explicit-module-boundary-types"
+      ],
+      "exclude": [
+        "no-inferrable-types"
+      ]
+    }
+  },
+  "fmt": {
+    "include": [
+      "src/",
+      "tests/",
+      "*.ts",
+      "*.md"
+    ],
+    "useTabs": false,
+    "lineWidth": 120,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve"
+  },
+  "test": {
+    "include": [
+      "tests/unit/"
+    ]
+  },
+  "tasks": {
+    "build": "deno task build:setup && deno task build:bundle && deno task build:teardown",
+    "build:setup": "echo 'Skip task build:setup'",
+    "build:bundle": "echo 'Skip task build:bundle'",
+    "build:teardown": "echo 'Skip task build:teardown'",
+    "test": "deno task test:setup && deno task test:unit && deno task test:e2e && deno task test:teardown",
+    "test:setup": "echo 'Skip task test:setup'",
+    "test:unit": "deno test tests/unit/",
+    "test:e2e": "echo 'Skip task test:e2e'",
+    "test:teardown": "echo 'Skip task test:teardown'",
+    "serve": "deno run --allow-env --allow-read --allow-write --allow-net server.ts tests/demo"
+  },
+  "imports": {
+    "@deno/emit": "jsr:@deno/emit@^0.45.0",
+    "@std/assert": "jsr:@std/assert",
+    "@std/cli": "jsr:@std/cli@^1.0.5"
+  }
+}
