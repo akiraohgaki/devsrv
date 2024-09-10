@@ -11,11 +11,13 @@ deno run --allow-env --allow-read --allow-write --allow-net \
 
 ## Options
 
-| Option             | Description             | Default           |
-| ------------------ | ----------------------- | ----------------- |
-| `-h,--host <host>` | Host name               | 0.0.0.0           |
-| `-p,--port <port>` | Port number             | 3000              |
-| `<directory>`      | Document root directory | Current directory |
+| Option                         | Description             | Default           |
+| ------------------------------ | ----------------------- | ----------------- |
+| `-h,--host <hostname>`         | Host name               | 0.0.0.0           |
+| `-p,--port <port>`             | Port number             | 3000              |
+| `--directory-index <filename>` | Directory index file    | index.html        |
+| `--bundle <true/false>`        | TypeScript bundling     | true              |
+| `<directory>`                  | Document root directory | Current directory |
 
 ## Request handling
 
@@ -34,6 +36,10 @@ When a browser requests a file with the `.bundle.js` extension, the server dynam
 This generated JavaScript is then served as a module, enabling it to be imported into other modules within the application.
 
 This approach eliminates the need for pre-building JavaScript bundles and provides a more efficient development workflow.
+
+## Documents
+
+https://jsr.io/@akiraohgaki/devsrv/doc
 
 ## License
 
