@@ -31,7 +31,7 @@ export default class Server {
    *
    * @param options - Options for the server.
    */
-  constructor(options: Partial<typeof serverOptions>) {
+  constructor(options: Partial<typeof serverOptions> = {}) {
     this.#options = { ...serverOptions, ...options };
   }
 
