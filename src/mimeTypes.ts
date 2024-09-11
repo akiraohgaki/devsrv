@@ -8,6 +8,7 @@ const mimeTypes: Record<string, string> = {
   'html': 'text/html',
   'css': 'text/css',
   'js': 'text/javascript',
+  'ts': 'text/plain',
   // Font
   'eot': 'application/vnd.ms-fontobject',
   'ttf': 'font/ttf',
