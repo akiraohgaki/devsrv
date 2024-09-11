@@ -53,38 +53,7 @@ export default class Server {
         hostname: this.#options.hostname,
         signal: this.#abortController.signal,
       },
-      async (request) => {
-        const path = new URL(request.url).pathname;
-
-        console.log(`${request.method} ${path}`);
-
-        if (this.#options.bundle && path.endsWith('.bundle.js')) {
-          try {
-            const result = await bundle(this.#options.documentRoot + path.replace('.bundle.js', '.ts'));
-            return this.#response(result.code, mimeTypes.js, 200);
-          } catch {
-            return this.#response('Not Found', mimeTypes.txt, 404);
-          }
-        }
-
-        if (path !== '/') {
-          const resolvedPath = path.endsWith('/') ? path + this.#options.directoryIndex : path;
-          try {
-            const content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
-            const ext = resolvedPath.split('.').pop() ?? '';
-            return this.#response(content, mimeTypes[ext] ?? mimeTypes.bin, 200);
-          } catch {
-            void 0;
-          }
-        }
-
-        try {
-          const content = await Deno.readFile(`${this.#options.documentRoot}/${this.#options.directoryIndex}`);
-          return this.#response(content, mimeTypes.html, 200);
-        } catch {
-          return this.#response('Not Found', mimeTypes.txt, 404);
-        }
-      },
+      this.#requestHandler.bind(this),
     );
 
     this.#server.finished.then(() => {
@@ -104,6 +73,45 @@ export default class Server {
     }
 
     this.#abortController?.abort();
+  }
+
+  /**
+   * Handles HTTP requests.
+   *
+   * @param request - Request object
+   */
+  async #requestHandler(request: Request): Promise<Response> {
+    const path = new URL(request.url).pathname;
+    console.log(`${request.method} ${path}`);
+
+    if (this.#options.bundle && path.endsWith('.bundle.js')) {
+      try {
+        const result = await bundle(this.#options.documentRoot + path.replace('.bundle.js', '.ts'));
+        return this.#response(result.code, mimeTypes.js, 200);
+      } catch (exception) {
+        console.error(exception instanceof Error ? exception.message : exception);
+        return this.#response('Not Found', mimeTypes.txt, 404);
+      }
+    }
+
+    if (path !== '/') {
+      const resolvedPath = path.endsWith('/') ? path + this.#options.directoryIndex : path;
+      try {
+        const content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
+        const ext = resolvedPath.split('.').pop() ?? '';
+        return this.#response(content, mimeTypes[ext] ?? mimeTypes.bin, 200);
+      } catch {
+        void 0;
+      }
+    }
+
+    try {
+      const content = await Deno.readFile(`${this.#options.documentRoot}/${this.#options.directoryIndex}`);
+      return this.#response(content, mimeTypes.html, 200);
+    } catch (exception) {
+      console.error(exception instanceof Error ? exception.message : exception);
+      return this.#response('Not Found', mimeTypes.txt, 404);
+    }
   }
 
   /**
