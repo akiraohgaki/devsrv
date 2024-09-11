@@ -1,3 +1,7 @@
+/**
+ * @module @akiraohgaki/devsrv/server
+ */
+
 import { parseArgs } from '@std/cli/parse-args';
 
 import { Server, serverOptions } from './mod.ts';

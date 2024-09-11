@@ -1,3 +1,3 @@
-import echo from './echo.ts';
+import template from './template.ts';
 
-document.body.appendChild(document.createTextNode(echo('Hello!')));
+document.body.appendChild(template.content);

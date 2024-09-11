@@ -58,7 +58,7 @@ Deno.test('Server', async (t) => {
     const responseB = await fetch('http://localhost:3333/index.html');
     const contentB = await responseB.text();
 
-    const responseC = await fetch('http://localhost:3333/dummy');
+    const responseC = await fetch('http://localhost:3333/abcdef.html');
     const contentC = await responseC.text();
 
     server.stop();
@@ -66,12 +66,12 @@ Deno.test('Server', async (t) => {
 
     assertStrictEquals(responseA.status, 200);
     assertStrictEquals(responseB.status, 200);
-    assertStrictEquals(responseB.status, 200);
+    assertStrictEquals(responseC.status, 200);
     assertStrictEquals(contentA, contentB);
     assertStrictEquals(contentA, contentC);
   });
 
-  await t.step('bundle', async () => {
+  await t.step('TypeScript bundling', async () => {
     const server = new Server({
       hostname: 'localhost',
       port: 3333,
@@ -89,26 +89,26 @@ Deno.test('Server', async (t) => {
     await wait(100);
 
     assertStrictEquals(response.status, 200);
-    assertStrictEquals(content.search('function __default') !== -1, true);
+    assertStrictEquals(content.search('was bundled into') !== -1, true);
   });
 
-  await t.step('not found', async () => {
+  await t.step('if the file is not found', async () => {
     const server = new Server({
       hostname: 'localhost',
       port: 3333,
       documentRoot: './tests/demo',
-      directoryIndex: 'dummy.html',
+      directoryIndex: 'abcdef.html',
       bundle: true,
     });
 
     server.start();
     await wait(100);
 
-    const responseA = await fetch('http://localhost:3333/dummy.html');
+    const responseA = await fetch('http://localhost:3333/abcdef.html');
     const contentA = await responseA.text();
     console.log(contentA);
 
-    const responseB = await fetch('http://localhost:3333/dummy.bundle.js');
+    const responseB = await fetch('http://localhost:3333/abcdef.bundle.js');
     const contentB = await responseB.text();
     console.log(contentB);
 
