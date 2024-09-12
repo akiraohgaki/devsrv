@@ -45,6 +45,8 @@ export default class Server {
       throw new Error('Server is already running.');
     }
 
+    console.log('Server options:', this.#options);
+
     this.#abortController = new AbortController();
 
     this.#server = Deno.serve(
