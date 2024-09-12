@@ -1,5 +1,7 @@
 # devsrv
 
+[![JSR](https://jsr.io/badges/@akiraohgaki/devsrv)](https://jsr.io/@akiraohgaki/devsrv)
+
 A lightweight development web server.
 
 For rapid prototyping and testing of front-end applications.
@@ -7,21 +9,40 @@ For rapid prototyping and testing of front-end applications.
 ## Usage
 
 ```sh
-deno run --allow-env --allow-read --allow-write --allow-net \
-  jsr:@akiraohgaki/devsrv/server -h localhost -p 3000 ./public
+deno run jsr:@akiraohgaki/devsrv/server [OPTIONS] [DIRECTORY_ARG]
 ```
 
-## Options
+| Arguments         | Description             | Default           |
+| ----------------- | ----------------------- | ----------------- |
+| `[DIRECTORY_ARG]` | Document root directory | Current directory |
 
-| Option                         | Description             | Default           |
-| ------------------------------ | ----------------------- | ----------------- |
-| `-h,--host <hostname>`         | Host name               | 0.0.0.0           |
-| `-p,--port <port>`             | Port number             | 3000              |
-| `--directory-index <filename>` | Directory index file    | index.html        |
-| `--bundle <true/false>`        | TypeScript bundling     | true              |
-| `<directory>`                  | Document root directory | Current directory |
+| Options                        | Description          | Default    |
+| ------------------------------ | -------------------- | ---------- |
+| `-h, --host <HOSTNAME>`        | Host name            | 0.0.0.0    |
+| `-p, --port <PORT>`            | Port number          | 3000       |
+| `--directory-index <FILENAME>` | Directory index file | index.html |
+| `--bundle <true/false>`        | TypeScript bundling  | true       |
 
-## Request handling
+### Examples
+
+Serve current directory.
+
+```sh
+deno run -A jsr:@akiraohgaki/devsrv/server
+```
+
+Serve specific directory with options.
+
+```sh
+deno run --allow-env --allow-read --allow-write --allow-net \
+  jsr:@akiraohgaki/devsrv/server \
+  -h localhost -p 3000 --directory-index=index.html --bundle=true \
+  ./public
+```
+
+## Features
+
+### Request handling
 
 For `.bundle.js` files: Transpile TypeScript files into JavaScript on-the-fly.
 
@@ -29,7 +50,7 @@ For other paths: Attempt to serve the file from the document root.
 
 If not found: Serve the default index file.
 
-## On-the-fly TypeScript bundling
+### On-the-fly TypeScript bundling
 
 Allows for seamless integration of TypeScript code into front-end applications.
 
@@ -39,7 +60,7 @@ This generated JavaScript is then served as a module, enabling it to be imported
 
 This approach eliminates the need for pre-building JavaScript bundles and provides a more efficient development workflow.
 
-## Documents
+## Documentation
 
 https://jsr.io/@akiraohgaki/devsrv/doc
 
