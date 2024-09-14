@@ -16,7 +16,7 @@ if (entryPoint && outfile) {
   console.log(`outfile: ${outfile}`);
 
   const result = await bundle(entryPoint, { minify });
-  Deno.writeTextFile(outfile, result.code);
+  await Deno.writeTextFile(outfile, result.code);
 
   Deno.exit(0);
 } else {
