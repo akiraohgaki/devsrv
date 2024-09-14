@@ -68,16 +68,17 @@
     ]
   },
   "tasks": {
+    "check": "deno fmt && deno lint && deno check mod.ts server.ts",
     "build": "deno task build:setup && deno task build:bundle && deno task build:teardown",
     "build:setup": "echo 'Skip task build:setup'",
     "build:bundle": "echo 'Skip task build:bundle'",
     "build:teardown": "echo 'Skip task build:teardown'",
     "test": "deno task test:setup && deno task test:unit && deno task test:e2e && deno task test:teardown",
     "test:setup": "echo 'Skip task test:setup'",
-    "test:unit": "deno test --allow-env --allow-read --allow-write --allow-net tests/unit/",
+    "test:unit": "deno test -A tests/unit/",
     "test:e2e": "echo 'Skip task test:e2e'",
     "test:teardown": "echo 'Skip task test:teardown'",
-    "serve": "deno run --allow-env --allow-read --allow-write --allow-net server.ts tests/demo"
+    "serve": "deno run -A server.ts tests/demo"
   },
   "imports": {
     "@deno/emit": "jsr:@deno/emit@^0.45.0",
