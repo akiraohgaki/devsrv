@@ -8,13 +8,15 @@ For rapid prototyping and testing of front-end applications.
 
 ## Usage
 
+### Server
+
 ```sh
-deno run jsr:@akiraohgaki/devsrv/server [OPTIONS] [DIRECTORY_ARG]
+deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
 ```
 
 | Arguments         | Description             | Default           |
 | ----------------- | ----------------------- | ----------------- |
-| `[DIRECTORY_ARG]` | Document root directory | Current directory |
+| `[DOCUMENT_ROOT]` | Document root directory | Current directory |
 
 | Options                        | Description          | Default    |
 | ------------------------------ | -------------------- | ---------- |
@@ -23,21 +25,65 @@ deno run jsr:@akiraohgaki/devsrv/server [OPTIONS] [DIRECTORY_ARG]
 | `--directory-index <FILENAME>` | Directory index file | index.html |
 | `--bundle <true/false>`        | TypeScript bundling  | true       |
 
+### Helper program: bundle
+
+```sh
+deno run jsr:@akiraohgaki/devsrv/bundle [OPTIONS] [ENTRY_POINT] [OUTFILE]
+```
+
+| Arguments       | Description               | Default |
+| --------------- | ------------------------- | ------- |
+| `[ENTRY_POINT]` | Entry point of the module | none    |
+| `[OUTFILE]`     | Output file               | none    |
+
+| Options                 | Description  | Default |
+| ----------------------- | ------------ | ------- |
+| `--minify <true/false>` | Minification | false   |
+
+### Helper program: remkdir
+
+```sh
+deno run jsr:@akiraohgaki/devsrv/remkdir [OPTIONS] [TARGET_DIRECTORY]
+```
+
+| Arguments            | Description      | Default |
+| -------------------- | ---------------- | ------- |
+| `[TARGET_DIRECTORY]` | Target directory | none    |
+
+| Options                          | Description                                                                      | Default |
+| -------------------------------- | -------------------------------------------------------------------------------- | ------- |
+| `--includes <FILES/DIRECTORIES>` | A comma-separated list of files or directories to copy into the target directory | none    |
+
 ### Examples
 
 Serve current directory.
 
 ```sh
-deno run -A jsr:@akiraohgaki/devsrv/server
+deno run -A jsr:@akiraohgaki/devsrv/serve
 ```
 
 Serve specific directory with options.
 
 ```sh
-deno run --allow-env --allow-read --allow-write --allow-net \
-  jsr:@akiraohgaki/devsrv/server \
+deno run -A jsr:@akiraohgaki/devsrv/serve \
   -h localhost -p 3000 --directory-index=index.html --bundle=true \
   ./public
+```
+
+Bundle scripts into single JavaScript file.
+
+```sh
+deno run -A jsr:@akiraohgaki/devsrv/bundle \
+  --minify=true \
+  ./src/main.ts ./public/main.bundle.js
+```
+
+Re-make destination directory and copy files.
+
+```sh
+deno run -A jsr:@akiraohgaki/devsrv/remkdir \
+ --includes='./src/index.html, ./src/favicon.ico, ./src/assets' \
+ ./public
 ```
 
 ## Features
