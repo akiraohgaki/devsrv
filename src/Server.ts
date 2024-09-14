@@ -27,7 +27,7 @@ export default class Server {
   #abortController: AbortController | null = null;
 
   /**
-   * Creates a new server.
+   * Creates a new instance of the Server class.
    *
    * @param options - Options for the server.
    */
