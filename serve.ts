@@ -3,7 +3,7 @@
  */
 
 import { Server, serverOptions } from './mod.ts';
-import { args, booleanValue, numberValue, stringValue } from './src/cliUtil.ts';
+import { args, booleanValue, numberValue, stringValue } from './src/cli-util.ts';
 
 const server = new Server({
   hostname: stringValue(args.h ?? args.host, serverOptions.hostname),

@@ -1,7 +1,7 @@
 import { bundle } from '@deno/emit';
 
-import mimeTypes from './mimeTypes.ts';
-import serverOptions from './serverOptions.ts';
+import mimeTypes from './mime-types.ts';
+import serverOptions from './server-options.ts';
 
 /**
  * Server class for serving files.

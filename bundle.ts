@@ -4,7 +4,7 @@
 
 import { bundle } from '@deno/emit';
 
-import { args, booleanValue, stringValue } from './src/cliUtil.ts';
+import { args, booleanValue, stringValue } from './src/cli-util.ts';
 
 const minify = booleanValue(args.minify, false);
 const entryPoint = stringValue(args._[0], '');
