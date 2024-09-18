@@ -1,5 +1,5 @@
 /**
- * Server options
+ * Server options.
  */
 const serverOptions = {
   hostname: '0.0.0.0',

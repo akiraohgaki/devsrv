@@ -1,5 +1,5 @@
 /**
- * MIME Types
+ * MIME Types.
  */
 const mimeTypes: Record<string, string> = {
   // Text
