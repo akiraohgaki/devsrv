@@ -131,8 +131,8 @@ export default class Server {
         headers: {
           'Content-Type': contentType,
           'Cross-Origin-Resource-Policy': 'cross-origin',
+          'Cache-Control': 'no-store',
           'Pragma': 'no-cache',
-          'Cache-Control': 'no-cache',
         },
       },
     );
