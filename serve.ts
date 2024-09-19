@@ -10,6 +10,7 @@ const server = new Server({
   port: numberValue(args.p ?? args.port, serverOptions.port),
   directoryIndex: stringValue(args['directory-index'], serverOptions.directoryIndex),
   bundle: booleanValue(args.bundle, serverOptions.bundle),
+  playground: booleanValue(args.playground, serverOptions.playground),
   documentRoot: stringValue(args._[0], serverOptions.documentRoot),
 });
 

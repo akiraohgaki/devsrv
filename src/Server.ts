@@ -2,6 +2,7 @@ import { bundle } from '@deno/emit';
 
 import mimeTypes from './mime-types.ts';
 import serverOptions from './server-options.ts';
+import playgroundPage from './playground-page.ts';
 
 /**
  * Server class for serving files.
@@ -13,6 +14,7 @@ import serverOptions from './server-options.ts';
  *   port: 3000,
  *   directoryIndex: 'index.html',
  *   bundle: true,
+ *   playground: true,
  *   documentRoot: './public',
  * });
  *
@@ -94,6 +96,10 @@ export default class Server {
         console.error(exception instanceof Error ? exception.message : exception);
         return this.#response('Not Found', mimeTypes.txt, 404);
       }
+    }
+
+    if (this.#options.playground && path.endsWith('.playground')) {
+      return this.#response(playgroundPage, mimeTypes.html, 200);
     }
 
     if (path !== '/') {
