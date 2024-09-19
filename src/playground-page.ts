@@ -36,14 +36,20 @@ aside {
 [data-content="logs"] {
   padding: 1rem;
   border: 1px solid #cccccc;
-  border-radius: 7px;
+  border-radius: 5px;
 }
 
 [data-content="code"] {
   display: block;
   padding: 1rem;
-  border-radius: 7px;
-  background-color: #eeeeee;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  outline: none;
+  overflow: auto;
+
+  &:focus {
+    border-color: #0098f1;
+  }
 }
 
 button[data-action] {
@@ -82,6 +88,24 @@ button[data-action] {
  * Script of the page.
  */
 const script = `
+import hljs from 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.10.0/build/es/highlight.min.js';
+
+const linkElement = document.createElement('link');
+linkElement.rel = 'stylesheet';
+linkElement.href = 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.10.0/build/styles/atom-one-dark.min.css';
+document.head.appendChild(linkElement);
+
+const codeElement = document.querySelector('[data-content="code"]');
+codeElement.classList.add('language-javascript');
+codeElement.addEventListener('blur', () => {
+  codeElement.dataset.highlighted = '';
+  codeElement.textContent = codeElement.textContent;
+  hljs.highlightElement(codeElement);
+});
+hljs.highlightElement(codeElement);
+
+////////////////////////////////////////////////////////////////
+
 async function wait(ms) {
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -208,7 +232,7 @@ const playgroundPage = `
   <article>
     <h2>Script</h2>
     <div data-content="script">
-    <pre><code data-content="code" contenteditable>${exampleCode}</code></pre>
+      <pre><code data-content="code" contenteditable>${exampleCode}</code></pre>
     </div>
     <button data-action="runCode">Run</button>
   </article>
