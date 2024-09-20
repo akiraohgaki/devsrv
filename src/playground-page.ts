@@ -1,7 +1,7 @@
 /**
  * Style of the page.
  */
-const style = `
+const style: string = `
 :root {
   font-size: 14px;
 }
@@ -87,7 +87,7 @@ button[data-action] {
 /**
  * Script of the page.
  */
-const script = `
+const script: string = `
 async function runCode() {
   const code = getCode().textContent;
 
@@ -202,7 +202,7 @@ document.querySelector('[data-action="logs.clear"]').addEventListener('click', c
 /**
  * Example code.
  */
-const exampleCode = `
+const exampleCode: string = `
 // You can import modules.
 //import * as mod from './mod.bundle.js';
 
@@ -237,7 +237,7 @@ code.set(codeContent);
 /**
  * Playground page.
  */
-const playgroundPage = `
+const playgroundPage: string = `
 <!DOCTYPE html>
 <html>
 
