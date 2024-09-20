@@ -245,7 +245,6 @@ const playgroundPage = `
   <meta charset="UTF-8">
   <title>Playground</title>
   <style>${style}</style>
-  <script type="module">${script}</script>
 </head>
 
 <body>
@@ -273,6 +272,8 @@ const playgroundPage = `
     <div data-content="logs"></div>
     <button data-action="logs.clear">Clear</button>
   </section>
+
+  <script type="module">${script}</script>
 </body>
 
 </html>
