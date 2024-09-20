@@ -2,6 +2,11 @@ import { assertStrictEquals } from '@std/assert';
 
 import { Server } from '../../mod.ts';
 
+const hostname = 'localhost';
+const port = 3333;
+const documentRoot = './tests/demo';
+const origin = `http://${hostname}:${port}`;
+
 async function wait(ms: number): Promise<void> {
   await new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -12,91 +17,117 @@ Deno.test('Server', async (t) => {
   await t.step('start and stop', async () => {
     const server = new Server();
 
-    let isRunning = false;
+    let isRunningA = false;
 
     server.start();
     await wait(100);
+
     try {
       server.start();
     } catch (exception) {
       if (exception instanceof Error) {
         console.log(exception.message);
-        isRunning = exception.message.search('already running') !== -1;
+        isRunningA = exception.message.search('already running') !== -1;
       }
     }
 
-    assertStrictEquals(isRunning, true);
+    let isRunningB = false;
 
     server.stop();
     await wait(100);
+
     try {
       server.stop();
     } catch (exception) {
       if (exception instanceof Error) {
         console.log(exception.message);
-        isRunning = exception.message.search('not running') === -1;
+        isRunningB = exception.message.search('not running') === -1;
       }
     }
 
-    assertStrictEquals(isRunning, false);
+    assertStrictEquals(isRunningA, true);
+    assertStrictEquals(isRunningB, false);
   });
 
   await t.step('directory index', async () => {
     const server = new Server({
-      hostname: 'localhost',
-      port: 3333,
-      documentRoot: './tests/demo',
+      hostname,
+      port,
+      documentRoot,
       directoryIndex: 'index.html',
     });
 
     server.start();
     await wait(100);
 
-    const responseA = await fetch('http://localhost:3333/');
+    const responseA = await fetch(`${origin}/`);
     const contentA = await responseA.text();
 
-    const responseB = await fetch('http://localhost:3333/index.html');
+    const responseB = await fetch(`${origin}/index.html`);
     const contentB = await responseB.text();
 
-    const responseC = await fetch('http://localhost:3333/abcdef.html');
+    const responseC = await fetch(`${origin}/abcdef.html`);
     const contentC = await responseC.text();
 
     server.stop();
     await wait(100);
 
     assertStrictEquals(responseA.status, 200);
+
     assertStrictEquals(responseB.status, 200);
-    assertStrictEquals(responseC.status, 200);
     assertStrictEquals(contentA, contentB);
+
+    assertStrictEquals(responseC.status, 200);
     assertStrictEquals(contentA, contentC);
   });
 
   await t.step('TypeScript bundling', async () => {
     const server = new Server({
-      hostname: 'localhost',
-      port: 3333,
-      documentRoot: './tests/demo',
+      hostname,
+      port,
+      documentRoot,
       bundle: true,
     });
 
     server.start();
     await wait(100);
 
-    const response = await fetch('http://localhost:3333/main.bundle.js');
-    const content = await response.text();
+    const responseA = await fetch(`${origin}/main.bundle.js`);
+    const contentA = await responseA.text();
 
     server.stop();
     await wait(100);
 
-    assertStrictEquals(response.status, 200);
-    assertStrictEquals(content.search('was bundled into') !== -1, true);
+    assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(contentA.search('bundled into') !== -1, true);
+  });
+
+  await t.step('playground page', async () => {
+    const server = new Server({
+      hostname,
+      port,
+      documentRoot,
+      playground: true,
+    });
+
+    server.start();
+    await wait(100);
+
+    const responseA = await fetch(`${origin}/test.playground`);
+    const contentA = await responseA.text();
+
+    server.stop();
+    await wait(100);
+
+    assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(contentA.search('<title>Playground</title>') !== -1, true);
   });
 
   await t.step('if the file is not found', async () => {
     const server = new Server({
-      hostname: 'localhost',
-      port: 3333,
-      documentRoot: './tests/demo',
+      hostname,
+      port,
+      documentRoot,
       directoryIndex: 'abcdef.html',
       bundle: true,
     });
@@ -104,18 +135,19 @@ Deno.test('Server', async (t) => {
     server.start();
     await wait(100);
 
-    const responseA = await fetch('http://localhost:3333/abcdef.html');
+    const responseA = await fetch(`${origin}/abcdef.html`);
     const contentA = await responseA.text();
-    console.log(contentA);
 
-    const responseB = await fetch('http://localhost:3333/abcdef.bundle.js');
+    const responseB = await fetch(`${origin}/abcdef.bundle.js`);
     const contentB = await responseB.text();
-    console.log(contentB);
 
     server.stop();
     await wait(100);
 
     assertStrictEquals(responseA.status, 404);
+    assertStrictEquals(contentA.search('Not Found') !== -1, true);
+
     assertStrictEquals(responseB.status, 404);
+    assertStrictEquals(contentB.search('Not Found') !== -1, true);
   });
 });

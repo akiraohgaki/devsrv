@@ -14,9 +14,9 @@ For rapid prototyping and testing of front-end applications.
 deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
 ```
 
-| Arguments         | Description             | Default           |
-| ----------------- | ----------------------- | ----------------- |
-| `[DOCUMENT_ROOT]` | Document root directory | Current directory |
+| Arguments         | Description             | Default                   |
+| ----------------- | ----------------------- | ------------------------- |
+| `[DOCUMENT_ROOT]` | Document root directory | Current working directory |
 
 | Options                        | Description          | Default    |
 | ------------------------------ | -------------------- | ---------- |
@@ -24,6 +24,7 @@ deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
 | `-p, --port <PORT>`            | Port number          | 3000       |
 | `--directory-index <FILENAME>` | Directory index file | index.html |
 | `--bundle <true/false>`        | TypeScript bundling  | true       |
+| `--playground <true/false>`    | Playground page      | true       |
 
 ### Helper program: bundle
 
@@ -56,19 +57,23 @@ deno run jsr:@akiraohgaki/devsrv/remkdir [OPTIONS] [TARGET_DIRECTORY]
 
 ### Examples
 
-Serve current directory.
+#### Server
+
+Serve static files from the current working directory.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/serve
 ```
 
-Serve specific directory with options.
+Serve static files from `./public` directory with options specified.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/serve \
-  -h localhost -p 3000 --directory-index=index.html --bundle=true \
+  -h localhost -p 3000 --directory-index=index.html --bundle=true --playground=true \
   ./public
 ```
+
+#### bundle
 
 Bundle scripts into single JavaScript file.
 
@@ -77,6 +82,8 @@ deno run -A jsr:@akiraohgaki/devsrv/bundle \
   --minify=true \
   ./src/main.ts ./public/main.bundle.js
 ```
+
+#### remkdir
 
 Re-make destination directory and copy files.
 
@@ -88,15 +95,19 @@ deno run -A jsr:@akiraohgaki/devsrv/remkdir \
 
 ## Features
 
-### Request handling
+### Server
 
-For `.bundle.js` files: Transpile TypeScript files into JavaScript on-the-fly.
+#### Request handling
+
+For `*.bundle.js` path: Transpile and bundle TypeScript files into JavaScript on-the-fly.
+
+For `*.playground` path: Serve the playground page.
 
 For other paths: Attempt to serve the file from the document root.
 
 If not found: Serve the default index file.
 
-### On-the-fly TypeScript bundling
+#### On-the-fly TypeScript bundling
 
 Allows for seamless integration of TypeScript code into front-end applications.
 
@@ -105,6 +116,12 @@ When a browser requests a file with the `.bundle.js` extension, the server dynam
 This generated JavaScript is then served as a module, enabling it to be imported into other modules within the application.
 
 This approach eliminates the need for pre-building JavaScript bundles and provides a more efficient development workflow.
+
+#### Code playground
+
+You can test your code instantly.
+
+When the request path ends with `.playground`, such as `http://localhost:3000/script.playground`, the playground page will be served to the browser.
 
 ## Documentation
 

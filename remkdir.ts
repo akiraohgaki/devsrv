@@ -4,7 +4,7 @@
 
 import $ from '@david/dax';
 
-import { args, stringValue } from './src/cliUtil.ts';
+import { args, stringValue } from './src/cli-util.ts';
 
 const includes = stringValue(args.includes, '');
 const targetDirectory = stringValue(args._[0], '');
