@@ -117,9 +117,9 @@ This generated JavaScript is then served as a module, enabling it to be imported
 
 This approach eliminates the need for pre-building JavaScript bundles and provides a more efficient development workflow.
 
-#### Script playground
+#### Code playground
 
-You can write scripts right in your browser and try them out instantly.
+You can test your code instantly.
 
 When the request path ends with `.playground`, such as `http://localhost:3000/script.playground`, the playground page will be served to the browser.
 
