@@ -3,7 +3,7 @@
  */
 const style = `
 :root {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 *,
@@ -15,18 +15,16 @@ const style = `
 body {
   margin: 0;
   background-color: #fefefe;
-  color: #222222;
-  font: 1rem/1.5 Arial, system-ui;
+  color: #333333;
+  font: 1rem/1.5 system-ui;
 }
 
 header,
-footer,
-article,
-aside {
-  margin: 2rem 4rem;
+section {
+  margin: 4rem;
 }
 
-[data-content="script"],
+[data-content="code"],
 [data-content="content"],
 [data-content="logs"] {
   margin: 1rem 0;
@@ -35,15 +33,17 @@ aside {
 [data-content="content"],
 [data-content="logs"] {
   padding: 1rem;
-  border: 1px solid #cccccc;
+  border: 2px solid #cccccc;
   border-radius: 5px;
 }
 
-[data-content="code"] {
+[data-content="code"] code {
   display: block;
   padding: 1rem;
-  border: 1px solid #cccccc;
+  border: 2px solid #cccccc;
   border-radius: 5px;
+  background-color: #f8f8f8;
+  color: #333333;
   outline: none;
   overflow: auto;
 
@@ -88,57 +88,68 @@ button[data-action] {
  * Script of the page.
  */
 const script = `
-import hljs from 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.10.0/build/es/highlight.min.js';
+async function runCode() {
+  const code = getCode().textContent;
 
-const linkElement = document.createElement('link');
-linkElement.rel = 'stylesheet';
-linkElement.href = 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.10.0/build/styles/atom-one-dark.min.css';
-document.head.appendChild(linkElement);
+  const url = URL.createObjectURL(new Blob([code], { type: 'text/javascript' }));
 
-const codeElement = document.querySelector('[data-content="code"]');
-codeElement.classList.add('language-javascript');
-codeElement.addEventListener('blur', () => {
-  codeElement.dataset.highlighted = '';
-  codeElement.textContent = codeElement.textContent;
-  hljs.highlightElement(codeElement);
-});
-hljs.highlightElement(codeElement);
+  try {
+    await import(url);
+  } catch (exception) {
+    console.error(exception);
 
-////////////////////////////////////////////////////////////////
-
-async function wait(ms) {
-  await new Promise((resolve) => setTimeout(resolve, ms));
+    if (exception instanceof Error) {
+      addLog(exception.message);
+    } else {
+      addLog(exception);
+    }
+  }
 }
 
-function setContent(data) {
-  clearContent();
+function getCode() {
+  return document.querySelector('[data-content="code"] code');
+}
 
-  const template = document.createElement('template');
+function setCode(data) {
+  getCode().textContent = data;
+}
 
-  if (typeof data === 'string') {
-    template.innerHTML = data;
-  } else if (data instanceof Node) {
-    template.content.appendChild(data.cloneNode(true));
-  } else if (data instanceof NodeList) {
-    for (const node of Array.from(data)) {
-      template.content.appendChild(node.cloneNode(true));
-    }
-  } else {
-    template.textContent = '' + data;
-  }
-
-  document.querySelector('[data-content="content"]').appendChild(template.content);
+function clearCode() {
+  getCode().innerHTML = '';
 }
 
 function getContent() {
   return document.querySelector('[data-content="content"]');
 }
 
-function clearContent() {
-  document.querySelector('[data-content="content"]').innerHTML = '';
+function setContent(data) {
+  const template = document.createElement('template');
+
+  if (typeof data === 'string') {
+    template.innerHTML = data;
+  } else if (data instanceof Node) {
+    template.content.appendChild(data);
+  } else if (data instanceof NodeList) {
+    for (const node of Array.from(data)) {
+      template.content.appendChild(node);
+    }
+  } else {
+    template.textContent = '' + data;
+  }
+
+  clearContent();
+  getContent().appendChild(template.content);
 }
 
-function log(data) {
+function clearContent() {
+  getContent().innerHTML = '';
+}
+
+function getLogs() {
+  return document.querySelector('[data-content="logs"]');
+}
+
+function addLog(data) {
   console.log(data);
 
   let content = '';
@@ -152,35 +163,40 @@ function log(data) {
   log.setAttribute('data-content', 'log');
   log.textContent = content;
 
-  document.querySelector('[data-content="logs"]').appendChild(log);
+  getLogs().appendChild(log);
 }
 
 function clearLogs() {
-  document.querySelector('[data-content="logs"]').innerHTML = '';
+  getLogs().innerHTML = '';
 }
 
-async function runCode() {
-  const code = document.querySelector('[data-content="code"]').textContent;
-
-  const url = URL.createObjectURL(new Blob([code], { type: 'text/javascript' }));
-
-  try {
-    await import(url);
-  } catch (exception) {
-    console.error(exception);
-
-    if (exception instanceof Error) {
-      log(exception.message);
-    } else {
-      log(exception);
-    }
-  }
+async function wait(ms) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-globalThis.page = { wait, setContent, getContent, clearContent, log, clearLogs };
-document.querySelector('[data-action="runCode"]').addEventListener('click', runCode);
-document.querySelector('[data-action="clearContent"]').addEventListener('click', clearContent);
-document.querySelector('[data-action="clearLogs"]').addEventListener('click', clearLogs);
+globalThis.playground = {
+  code: {
+    run: runCode,
+    get: getCode,
+    set: setCode,
+    clear: clearCode,
+  },
+  content: {
+    get: getContent,
+    set: setContent,
+    clear: clearContent,
+  },
+  logs: {
+    get: getLogs,
+    add: addLog,
+    clear: clearLogs,
+  },
+  wait: wait,
+};
+document.querySelector('[data-action="code.run"]').addEventListener('click', runCode);
+document.querySelector('[data-action="code.clear"]').addEventListener('click', clearCode);
+document.querySelector('[data-action="content.clear"]').addEventListener('click', clearContent);
+document.querySelector('[data-action="logs.clear"]').addEventListener('click', clearLogs);
 `;
 
 /**
@@ -191,24 +207,32 @@ const exampleCode = `
 //import * as mod from './mod.bundle.js';
 
 // Helper functions available.
-const { wait, setContent, getContent, clearContent, log, clearLogs } = globalThis.page;
+const { code, content, logs, wait } = globalThis.playground;
 
-// For example:
-setContent('&lt;button&gt;Click me&lt;/button&gt;');
+// For example
 
-const button = getContent().querySelector('button');
+content.set('&lt;button&gt;Click me&lt;/button&gt;');
+
+const button = content.get().querySelector('button');
 
 button.addEventListener('click', () => {
-  log('Button clicked!');
+  logs.add('Button clicked!');
 });
 
-log(getContent().innerHTML);
+logs.add(content.get().innerHTML);
 
 await wait(30000);
 
-clearContent();
-clearLogs();
-`;
+const codeContent = code.get().textContent;
+
+code.clear();
+content.clear();
+logs.clear();
+
+await wait(1000);
+
+code.set(codeContent);
+`.trim();
 
 /**
  * Playground page.
@@ -229,25 +253,26 @@ const playgroundPage = `
     <h1>Playground</h1>
   </header>
 
-  <article>
-    <h2>Script</h2>
-    <div data-content="script">
-      <pre><code data-content="code" contenteditable>${exampleCode}</code></pre>
+  <section>
+    <h2>Code</h2>
+    <div data-content="code">
+      <pre><code contenteditable>${exampleCode}</code></pre>
     </div>
-    <button data-action="runCode">Run</button>
-  </article>
+    <button data-action="code.run">Run</button>
+    <button data-action="code.clear">Clear</button>
+  </section>
 
-  <aside>
+  <section>
     <h2>Content</h2>
     <div data-content="content"></div>
-    <button data-action="clearContent">Clear</button>
-  </aside>
+    <button data-action="content.clear">Clear</button>
+  </section>
 
-  <footer>
+  <section>
     <h2>Logs</h2>
     <div data-content="logs"></div>
-    <button data-action="clearLogs">Clear</button>
-  </footer>
+    <button data-action="logs.clear">Clear</button>
+  </section>
 </body>
 
 </html>
