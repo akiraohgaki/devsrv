@@ -25,12 +25,12 @@ section {
 }
 
 [data-content="code"],
-[data-content="content"],
+[data-content="preview"],
 [data-content="logs"] {
   margin: 1rem 0;
 }
 
-[data-content="content"],
+[data-content="preview"],
 [data-content="logs"] {
   padding: 1rem;
   border: 2px solid #cccccc;
@@ -118,11 +118,11 @@ function clearCode() {
   getCode().innerHTML = '';
 }
 
-function getContent() {
-  return document.querySelector('[data-content="content"]');
+function getPreview() {
+  return document.querySelector('[data-content="preview"]');
 }
 
-function setContent(data) {
+function setPreview(data) {
   const template = document.createElement('template');
 
   if (typeof data === 'string') {
@@ -137,12 +137,12 @@ function setContent(data) {
     template.textContent = '' + data;
   }
 
-  clearContent();
-  getContent().appendChild(template.content);
+  clearPreview();
+  getPreview().appendChild(template.content);
 }
 
-function clearContent() {
-  getContent().innerHTML = '';
+function clearPreview() {
+  getPreview().innerHTML = '';
 }
 
 function getLogs() {
@@ -181,10 +181,10 @@ globalThis.playground = {
     set: setCode,
     clear: clearCode,
   },
-  content: {
-    get: getContent,
-    set: setContent,
-    clear: clearContent,
+  preview: {
+    get: getPreview,
+    set: setPreview,
+    clear: clearPreview,
   },
   logs: {
     get: getLogs,
@@ -195,7 +195,7 @@ globalThis.playground = {
 };
 document.querySelector('[data-action="code.run"]').addEventListener('click', runCode);
 document.querySelector('[data-action="code.clear"]').addEventListener('click', clearCode);
-document.querySelector('[data-action="content.clear"]').addEventListener('click', clearContent);
+document.querySelector('[data-action="preview.clear"]').addEventListener('click', clearPreview);
 document.querySelector('[data-action="logs.clear"]').addEventListener('click', clearLogs);
 `;
 
@@ -207,26 +207,26 @@ const exampleCode: string = `
 //import * as mod from 'http://localhost:3000/mod.bundle.js';
 
 // Helper functions available.
-const { code, content, logs, wait } = globalThis.playground;
+const { code, preview, logs, wait } = globalThis.playground;
 
 // For example
 
-content.set('&lt;button&gt;Click me&lt;/button&gt;');
+preview.set('&lt;button&gt;Click me&lt;/button&gt;');
 
-const button = content.get().querySelector('button');
+const button = preview.get().querySelector('button');
 
 button.addEventListener('click', () => {
   logs.add('Button clicked!');
 });
 
-logs.add(content.get().innerHTML);
+logs.add(preview.get().innerHTML);
 
 await wait(30000);
 
 const codeContent = code.get().textContent;
 
 code.clear();
-content.clear();
+preview.clear();
 logs.clear();
 
 await wait(1000);
@@ -262,9 +262,9 @@ const playgroundPage: string = `
   </section>
 
   <section>
-    <h2>Content</h2>
-    <div data-content="content"></div>
-    <button data-action="content.clear">Clear</button>
+    <h2>Preview</h2>
+    <div data-content="preview"></div>
+    <button data-action="preview.clear">Clear</button>
   </section>
 
   <section>
