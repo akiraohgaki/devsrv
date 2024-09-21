@@ -6,12 +6,16 @@ import $ from '@david/dax';
 
 import { args, stringValue } from './src/cli-util.ts';
 
-const includes = stringValue(args.includes, '');
-const targetDirectory = stringValue(args._[0], '');
+try {
+  const includes = stringValue(args.includes, '');
+  const targetDirectory = stringValue(args._[0], '');
 
-if (targetDirectory) {
   console.log(`includes: ${includes}`);
   console.log(`targetDirectory: ${targetDirectory}`);
+
+  if (!targetDirectory) {
+    throw new Error('Invalid argument error');
+  }
 
   await $`rm -rf ${targetDirectory}`;
   await $`mkdir -p ${targetDirectory}`;
@@ -25,8 +29,8 @@ if (targetDirectory) {
   await $`ls -a ${targetDirectory}`;
 
   Deno.exit(0);
-} else {
-  console.error('Invalid argument error');
+} catch (exception) {
+  console.error(exception instanceof Error ? exception.message : exception);
 
   Deno.exit(1);
 }
