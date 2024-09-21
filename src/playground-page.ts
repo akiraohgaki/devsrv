@@ -204,7 +204,7 @@ document.querySelector('[data-action="logs.clear"]').addEventListener('click', c
  */
 const exampleCode: string = `
 // You can import modules.
-//import * as mod from './mod.bundle.js';
+//import * as mod from 'http://localhost:3000/mod.bundle.js';
 
 // Helper functions available.
 const { code, content, logs, wait } = globalThis.playground;
