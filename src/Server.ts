@@ -1,7 +1,7 @@
-import { bundle } from '@deno/emit';
+import type { ServerOptions } from './types.ts';
 
+import BuildHelper from './BuildHelper.ts';
 import mimeTypes from './mime-types.ts';
-import serverOptions from './server-options.ts';
 import playgroundPage from './playground-page.ts';
 
 /**
@@ -24,7 +24,7 @@ import playgroundPage from './playground-page.ts';
  * ```
  */
 export default class Server {
-  #options: typeof serverOptions;
+  #options: ServerOptions;
   #server: Deno.HttpServer | null = null;
   #abortController: AbortController | null = null;
 
@@ -33,8 +33,16 @@ export default class Server {
    *
    * @param options - Options for the server.
    */
-  constructor(options: Partial<typeof serverOptions> = {}) {
-    this.#options = { ...serverOptions, ...options };
+  constructor(options: Partial<ServerOptions> = {}) {
+    this.#options = {
+      hostname: '0.0.0.0',
+      port: 3000,
+      directoryIndex: 'index.html',
+      bundle: true,
+      playground: true,
+      documentRoot: '.',
+      ...options,
+    };
   }
 
   /**
@@ -46,8 +54,6 @@ export default class Server {
     if (this.#server) {
       throw new Error('Server is already running.');
     }
-
-    console.log('Server options:', this.#options);
 
     this.#abortController = new AbortController();
 
@@ -90,8 +96,9 @@ export default class Server {
 
     if (this.#options.bundle && path.endsWith('.bundle.js')) {
       try {
-        const result = await bundle(this.#options.documentRoot + path.replace('.bundle.js', '.ts'));
-        return this.#response(result.code, mimeTypes.js, 200);
+        const buildHelper = new BuildHelper();
+        const code = await buildHelper.bundle(this.#options.documentRoot + path.replace('.bundle.js', '.ts'));
+        return this.#response(code, mimeTypes.js, 200);
       } catch (exception) {
         console.error(exception instanceof Error ? exception.message : exception);
         return this.#response('Not Found', mimeTypes.txt, 404);

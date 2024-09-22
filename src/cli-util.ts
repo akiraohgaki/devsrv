@@ -9,7 +9,7 @@ const args = parseArgs(Deno.args);
  * Converts a CLI argument value to a boolean value.
  *
  * @param value - The value of a CLI argument.
- * @param defaultValue - The default boolean value to return if the argument is invalid or undefined.
+ * @param defaultValue - The default value to return if the argument is invalid or undefined.
  */
 function booleanValue(value: unknown, defaultValue: boolean): boolean {
   if (typeof value === 'boolean') {
@@ -25,7 +25,7 @@ function booleanValue(value: unknown, defaultValue: boolean): boolean {
  * Converts a CLI argument value to a number value.
  *
  * @param value - The value of a CLI argument.
- * @param defaultValue - The default number value to return if the argument is invalid or undefined.
+ * @param defaultValue - The default value to return if the argument is invalid or undefined.
  */
 function numberValue(value: unknown, defaultValue: number): number {
   if (typeof value === 'number') {
@@ -41,7 +41,7 @@ function numberValue(value: unknown, defaultValue: number): number {
  * Converts a CLI argument value to a string value.
  *
  * @param value - The value of a CLI argument.
- * @param defaultValue - The default string value to return if the argument is invalid or undefined.
+ * @param defaultValue - The default value to return if the argument is invalid or undefined.
  */
 function stringValue(value: unknown, defaultValue: string): string {
   if (typeof value === 'string') {
@@ -53,4 +53,20 @@ function stringValue(value: unknown, defaultValue: string): string {
   return defaultValue;
 }
 
-export { args, booleanValue, numberValue, stringValue };
+/**
+ * Converts a CLI argument value to an array of strings.
+ *
+ * @param value - The value of a CLI argument.
+ * @param defaultValue - The default value to return if the argument is invalid or undefined.
+ */
+function arrayValue(value: unknown, defaultValue: Array<string>): Array<string> {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (typeof value === 'string') {
+    return value.split(',').map((item) => item.trim());
+  }
+  return defaultValue;
+}
+
+export { args, arrayValue, booleanValue, numberValue, stringValue };

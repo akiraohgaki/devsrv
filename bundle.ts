@@ -2,25 +2,36 @@
  * @module @akiraohgaki/devsrv/bundle
  */
 
-import { bundle } from '@deno/emit';
+import type { BuildHelperBundleOptions } from './mod.ts';
 
+import { BuildHelper } from './mod.ts';
 import { args, booleanValue, stringValue } from './src/cli-util.ts';
 
-const minify = booleanValue(args.minify, false);
-const entryPoint = stringValue(args._[0], '');
-const outfile = stringValue(args._[1], '');
+try {
+  const entryPoint = stringValue(args._[0], '');
+  const outFile = stringValue(args._[1], '');
+  const options: BuildHelperBundleOptions = {
+    minify: booleanValue(args.minify, false),
+  };
 
-if (entryPoint && outfile) {
-  console.log(`minify: ${minify}`);
-  console.log(`entryPoint: ${entryPoint}`);
-  console.log(`outfile: ${outfile}`);
+  console.log('entryPoint:', entryPoint);
+  console.log('outFile:', outFile);
+  console.log('options:', options);
 
-  const result = await bundle(entryPoint, { minify });
-  await Deno.writeTextFile(outfile, result.code);
+  if (!entryPoint) {
+    throw new Error('entryPoint must be set.');
+  }
+
+  if (!outFile) {
+    throw new Error('outFile must be set.');
+  }
+
+  const buildHelper = new BuildHelper();
+  await buildHelper.bundleFile(entryPoint, outFile, options);
 
   Deno.exit(0);
-} else {
-  console.error('Invalid argument error');
+} catch (exception) {
+  console.error(exception instanceof Error ? exception.message : exception);
 
   Deno.exit(1);
 }
