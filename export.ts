@@ -17,7 +17,7 @@ try {
   }
 
   const buildHelper = new BuildHelper();
-  buildHelper.export(outDirectory, includes);
+  await buildHelper.export(outDirectory, includes);
 
   Deno.exit(0);
 } catch (exception) {
