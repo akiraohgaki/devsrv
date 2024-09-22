@@ -26,34 +26,34 @@ deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
 | `--bundle <true/false>`        | TypeScript bundling  | true       |
 | `--playground <true/false>`    | Playground page      | true       |
 
-### Helper program: bundle
+### Build helper program: bundle
 
 ```sh
-deno run jsr:@akiraohgaki/devsrv/bundle [OPTIONS] [ENTRY_POINT] [OUTFILE]
+deno run jsr:@akiraohgaki/devsrv/bundle [OPTIONS] [ENTRY_POINT] [OUT_FILE]
 ```
 
-| Arguments       | Description               | Default |
-| --------------- | ------------------------- | ------- |
-| `[ENTRY_POINT]` | Entry point of the module | none    |
-| `[OUTFILE]`     | Output file               | none    |
+| Arguments       | Description           | Default |
+| --------------- | --------------------- | ------- |
+| `[ENTRY_POINT]` | Entry point to bundle | none    |
+| `[OUT_FILE]`    | Output file           | none    |
 
 | Options                 | Description  | Default |
 | ----------------------- | ------------ | ------- |
 | `--minify <true/false>` | Minification | false   |
 
-### Helper program: remkdir
+### Build helper program: export
 
 ```sh
-deno run jsr:@akiraohgaki/devsrv/remkdir [OPTIONS] [TARGET_DIRECTORY]
+deno run jsr:@akiraohgaki/devsrv/export [OPTIONS] [OUT_DIRECTORY]
 ```
 
-| Arguments            | Description      | Default |
-| -------------------- | ---------------- | ------- |
-| `[TARGET_DIRECTORY]` | Target directory | none    |
+| Arguments         | Description      | Default |
+| ----------------- | ---------------- | ------- |
+| `[OUT_DIRECTORY]` | Output directory | none    |
 
-| Options                          | Description                                                                      | Default |
-| -------------------------------- | -------------------------------------------------------------------------------- | ------- |
-| `--includes <FILES/DIRECTORIES>` | A comma-separated list of files or directories to copy into the target directory | none    |
+| Options                          | Description                                                | Default |
+| -------------------------------- | ---------------------------------------------------------- | ------- |
+| `--includes <FILES/DIRECTORIES>` | A comma-separated list of files and directories to include | none    |
 
 ### Examples
 
@@ -65,7 +65,7 @@ Serve static files from the current working directory.
 deno run -A jsr:@akiraohgaki/devsrv/serve
 ```
 
-Serve static files from `./public` directory with options specified.
+Serve static files from ./public directory with options specified.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/serve \
@@ -83,12 +83,12 @@ deno run -A jsr:@akiraohgaki/devsrv/bundle \
   ./src/main.ts ./public/main.bundle.js
 ```
 
-#### remkdir
+#### export
 
-Re-make destination directory and copy files.
+Export files into ./public directory.
 
 ```sh
-deno run -A jsr:@akiraohgaki/devsrv/remkdir \
+deno run -A jsr:@akiraohgaki/devsrv/export \
  --includes='./src/index.html, ./src/favicon.ico, ./src/assets' \
  ./public
 ```
