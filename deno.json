@@ -5,7 +5,7 @@
     ".": "./mod.ts",
     "./serve": "./serve.ts",
     "./bundle": "./bundle.ts",
-    "./remkdir": "./remkdir.ts"
+    "./export": "./export.ts"
   },
   "publish": {
     "include": [
@@ -13,7 +13,7 @@
       "mod.ts",
       "serve.ts",
       "bundle.ts",
-      "remkdir.ts",
+      "export.ts",
       "deno.json",
       "README.md",
       "LICENSE"
@@ -72,10 +72,10 @@
     ]
   },
   "tasks": {
-    "check": "deno fmt && deno lint && deno check mod.ts serve.ts bundle.ts remkdir.ts",
+    "check": "deno fmt && deno lint && deno check mod.ts serve.ts bundle.ts export.ts",
     "build": "deno task build:setup && deno task build:bundle && deno task build:teardown",
-    "build:setup": "echo 'Skip task build:setup'",
-    "build:bundle": "echo 'Skip task build:bundle'",
+    "build:setup": "deno run -A export.ts --includes='tests/demo/index.html' tmp/demo",
+    "build:bundle": "deno run -A bundle.ts --minify=true tests/demo/main.ts tmp/demo/main.bundle.js",
     "build:teardown": "echo 'Skip task build:teardown'",
     "test": "deno task test:setup && deno task test:unit && deno task test:e2e && deno task test:teardown",
     "test:setup": "echo 'Skip task test:setup'",
