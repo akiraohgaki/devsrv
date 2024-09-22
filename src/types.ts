@@ -2,11 +2,29 @@
  * Server options.
  */
 export interface ServerOptions {
+  /**
+   * Host name.
+   */
   hostname: string;
+  /**
+   * Port number.
+   */
   port: number;
+  /**
+   * Directory index file.
+   */
   directoryIndex: string;
+  /**
+   * TypeScript bundling.
+   */
   bundle: boolean;
+  /**
+   * Playground page.
+   */
   playground: boolean;
+  /**
+   * Document root directory.
+   */
   documentRoot: string;
 }
 
@@ -14,5 +32,8 @@ export interface ServerOptions {
  * Bundler options.
  */
 export interface BuildHelperBundleOptions {
+  /**
+   * Minification.
+   */
   minify: boolean;
 }
