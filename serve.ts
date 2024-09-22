@@ -2,18 +2,24 @@
  * @module @akiraohgaki/devsrv/serve
  */
 
-import { Server, serverOptions } from './mod.ts';
+import type { ServerOptions } from './mod.ts';
+
+import { Server } from './mod.ts';
 import { args, booleanValue, numberValue, stringValue } from './src/cli-util.ts';
 
 try {
-  const server = new Server({
-    hostname: stringValue(args.h ?? args.host, serverOptions.hostname),
-    port: numberValue(args.p ?? args.port, serverOptions.port),
-    directoryIndex: stringValue(args['directory-index'], serverOptions.directoryIndex),
-    bundle: booleanValue(args.bundle, serverOptions.bundle),
-    playground: booleanValue(args.playground, serverOptions.playground),
-    documentRoot: stringValue(args._[0], serverOptions.documentRoot),
-  });
+  const options: ServerOptions = {
+    hostname: stringValue(args.h ?? args.host, '0.0.0.0'),
+    port: numberValue(args.p ?? args.port, 3000),
+    directoryIndex: stringValue(args['directory-index'], 'index.html'),
+    bundle: booleanValue(args.bundle, true),
+    playground: booleanValue(args.playground, true),
+    documentRoot: stringValue(args._[0], '.'),
+  };
+
+  console.log('options:', options);
+
+  const server = new Server(options);
 
   server.start();
 } catch (exception) {
