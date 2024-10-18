@@ -255,7 +255,7 @@ const playgroundPage: string = `
   <section>
     <h2>Code</h2>
     <div data-content="code">
-      <pre><code contenteditable>${exampleCode}</code></pre>
+      <pre><code contenteditable="true" spellcheck="false">${exampleCode}</code></pre>
     </div>
     <button data-action="code.run">Run</button>
     <button data-action="code.clear">Clear</button>
