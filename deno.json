@@ -79,16 +79,18 @@
     "build:bundle": "deno run -A bundle.ts --minify=true tests/demo/main.ts tmp/demo/main.bundle.js",
     "build:teardown": "echo 'Skip task build:teardown'",
     "test": "deno task test:setup && deno task test:unit && deno task test:e2e && deno task test:teardown",
-    "test:setup": "echo 'Skip task test:setup'",
-    "test:unit": "deno test -A tests/unit/",
-    "test:e2e": "echo 'Skip task test:e2e'",
+    "test:setup": "deno run -A npm:playwright install --with-deps",
+    "test:unit": "deno test -A --coverage && deno coverage --html",
+    "test:e2e": "deno run -A npm:playwright test",
     "test:teardown": "echo 'Skip task test:teardown'",
     "serve": "deno run -A serve.ts tests/demo"
   },
   "imports": {
     "@david/dax": "jsr:@david/dax@^0.42.0",
     "@deno/emit": "jsr:@deno/emit@^0.46.0",
+    "@playwright/test": "npm:@playwright/test",
     "@std/assert": "jsr:@std/assert",
     "@std/cli": "jsr:@std/cli@^1.0.6"
-  }
+  },
+  "nodeModulesDir": "auto"
 }
