@@ -5,7 +5,7 @@
 import type { BuildHelperBundleOptions } from './mod.ts';
 
 import { BuildHelper } from './mod.ts';
-import { args, booleanValue, stringValue } from './src/cli-util.ts';
+import { args, booleanValue, stringValue } from './src/cli.ts';
 
 try {
   const entryPoint = stringValue(args._[0], '');
