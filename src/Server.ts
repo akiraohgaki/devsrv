@@ -1,7 +1,7 @@
 import type { ServerOptions } from './types.ts';
 
 import BuildHelper from './BuildHelper.ts';
-import mimeTypes from './mime-types.ts';
+import mimeTypes from './mimeTypes.ts';
 import playgroundPage from './playground-page.ts';
 
 /**
