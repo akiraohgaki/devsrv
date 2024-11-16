@@ -61,7 +61,7 @@ function stringValue(value: unknown, defaultValue: string): string {
  */
 function arrayValue(value: unknown, defaultValue: Array<string>): Array<string> {
   if (Array.isArray(value)) {
-    return value;
+    return value.map((item) => '' + item);
   }
   if (typeof value === 'string') {
     return value.split(',').map((item) => item.trim());
