@@ -94,40 +94,54 @@ export default class Server {
     const path = new URL(request.url).pathname;
     console.log(`${request.method} ${path}`);
 
-    if (this.#options.bundle && path.endsWith('.bundle.js')) {
+    if (path.endsWith('.playground') && this.#options.playground) {
+      return this.#response(200, mimeTypes.html, playgroundPage);
+    }
+
+    if (path.endsWith('.bundle.js') && this.#options.bundle) {
+      const buildHelper = new BuildHelper();
+      const resolvedPath = path.replace(/^(.+)\.bundle\.js$/, '$1.ts');
+      let content: string | null = null;
+
       try {
-        const buildHelper = new BuildHelper();
-        const code = await buildHelper.bundle(this.#options.documentRoot + path.replace('.bundle.js', '.ts'));
-        return this.#response(200, mimeTypes.js, code);
+        content = await buildHelper.bundle(this.#options.documentRoot + resolvedPath);
       } catch (exception) {
         console.error(exception instanceof Error ? exception.message : exception);
         return this.#response(404, mimeTypes.txt, 'Not Found');
       }
-    }
 
-    if (this.#options.playground && path.endsWith('.playground')) {
-      return this.#response(200, mimeTypes.html, playgroundPage);
+      return this.#response(200, mimeTypes.js, content);
     }
 
     if (path !== '/') {
+      const resolvedPath = path.endsWith('/') ? path + this.#options.directoryIndex : path;
+      const ext = resolvedPath.split('.').pop() ?? '';
+      const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
+      let content: Uint8Array | null = null;
+
       try {
-        const resolvedPath = path.endsWith('/') ? path + this.#options.directoryIndex : path;
-        const ext = resolvedPath.split('.').pop() ?? '';
-        const content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
-        return this.#response(200, mimeTypes[ext] ?? mimeTypes.bin, content);
+        content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
       } catch {
         void 0;
       }
+
+      if (content !== null) {
+        return this.#response(200, mimeType, content);
+      }
     }
 
+    const ext = this.#options.directoryIndex.split('.').pop() ?? '';
+    const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
+    let content: Uint8Array | null = null;
+
     try {
-      const ext = this.#options.directoryIndex.split('.').pop() ?? '';
-      const content = await Deno.readFile(`${this.#options.documentRoot}/${this.#options.directoryIndex}`);
-      return this.#response(200, mimeTypes[ext] ?? mimeTypes.bin, content);
+      content = await Deno.readFile(this.#options.documentRoot + '/' + this.#options.directoryIndex);
     } catch (exception) {
       console.error(exception instanceof Error ? exception.message : exception);
       return this.#response(404, mimeTypes.txt, 'Not Found');
     }
+
+    return this.#response(200, mimeType, content);
   }
 
   /**
