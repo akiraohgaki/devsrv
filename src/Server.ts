@@ -98,45 +98,46 @@ export default class Server {
       try {
         const buildHelper = new BuildHelper();
         const code = await buildHelper.bundle(this.#options.documentRoot + path.replace('.bundle.js', '.ts'));
-        return this.#response(code, mimeTypes.js, 200);
+        return this.#response(200, mimeTypes.js, code);
       } catch (exception) {
         console.error(exception instanceof Error ? exception.message : exception);
-        return this.#response('Not Found', mimeTypes.txt, 404);
+        return this.#response(404, mimeTypes.txt, 'Not Found');
       }
     }
 
     if (this.#options.playground && path.endsWith('.playground')) {
-      return this.#response(playgroundPage, mimeTypes.html, 200);
+      return this.#response(200, mimeTypes.html, playgroundPage);
     }
 
     if (path !== '/') {
-      const resolvedPath = path.endsWith('/') ? path + this.#options.directoryIndex : path;
       try {
-        const content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
+        const resolvedPath = path.endsWith('/') ? path + this.#options.directoryIndex : path;
         const ext = resolvedPath.split('.').pop() ?? '';
-        return this.#response(content, mimeTypes[ext] ?? mimeTypes.bin, 200);
+        const content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
+        return this.#response(200, mimeTypes[ext] ?? mimeTypes.bin, content);
       } catch {
         void 0;
       }
     }
 
     try {
+      const ext = this.#options.directoryIndex.split('.').pop() ?? '';
       const content = await Deno.readFile(`${this.#options.documentRoot}/${this.#options.directoryIndex}`);
-      return this.#response(content, mimeTypes.html, 200);
+      return this.#response(200, mimeTypes[ext] ?? mimeTypes.bin, content);
     } catch (exception) {
       console.error(exception instanceof Error ? exception.message : exception);
-      return this.#response('Not Found', mimeTypes.txt, 404);
+      return this.#response(404, mimeTypes.txt, 'Not Found');
     }
   }
 
   /**
    * Creates a response object.
    *
-   * @param body - Content body
-   * @param contentType - Content type
    * @param status - HTTP status code
+   * @param contentType - Content type
+   * @param body - Content body
    */
-  #response(body: BodyInit, contentType: string, status: number = 200): Response {
+  #response(status: number, contentType: string, body: BodyInit): Response {
     return new Response(
       body,
       {
