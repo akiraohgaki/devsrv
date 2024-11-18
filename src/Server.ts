@@ -7,7 +7,7 @@ import playgroundPage from './playgroundPage.ts';
 /**
  * Server class for serving files.
  *
- * @example
+ * @example Basic usage
  * ```ts
  * const server = new Server({
  *   hostname: 'localhost',

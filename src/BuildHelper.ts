@@ -6,7 +6,7 @@ import $ from '@david/dax';
 /**
  * Build helper class.
  *
- * @example
+ * @example Basic usage
  * ```ts
  * const buildHelper = new BuildHelper();
  *
