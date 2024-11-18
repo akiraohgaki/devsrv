@@ -49,6 +49,27 @@ Deno.test('Server', async (t) => {
     assertStrictEquals(isRunningB, false);
   });
 
+  await t.step('playground page', async () => {
+    const server = new Server({
+      hostname,
+      port,
+      documentRoot,
+      playground: true,
+    });
+
+    server.start();
+    await wait(100);
+
+    const responseA = await fetch(`${origin}/test.playground`);
+    const contentA = await responseA.text();
+
+    server.stop();
+    await wait(100);
+
+    assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(contentA.search('<title>Playground</title>') !== -1, true);
+  });
+
   await t.step('directory index', async () => {
     const server = new Server({
       hostname,
@@ -100,27 +121,6 @@ Deno.test('Server', async (t) => {
 
     assertStrictEquals(responseA.status, 200);
     assertStrictEquals(contentA.search('bundled into') !== -1, true);
-  });
-
-  await t.step('playground page', async () => {
-    const server = new Server({
-      hostname,
-      port,
-      documentRoot,
-      playground: true,
-    });
-
-    server.start();
-    await wait(100);
-
-    const responseA = await fetch(`${origin}/test.playground`);
-    const contentA = await responseA.text();
-
-    server.stop();
-    await wait(100);
-
-    assertStrictEquals(responseA.status, 200);
-    assertStrictEquals(contentA.search('<title>Playground</title>') !== -1, true);
   });
 
   await t.step('if the file is not found', async () => {
