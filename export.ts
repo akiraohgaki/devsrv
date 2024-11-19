@@ -3,7 +3,7 @@
  */
 
 import { BuildHelper } from './mod.ts';
-import { args, arrayValue, stringValue } from './src/cli-util.ts';
+import { args, arrayValue, stringValue } from './src/cli.ts';
 
 try {
   const outDirectory = stringValue(args._[0], '');

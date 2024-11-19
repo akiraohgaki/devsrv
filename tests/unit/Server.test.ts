@@ -49,6 +49,28 @@ Deno.test('Server', async (t) => {
     assertStrictEquals(isRunningB, false);
   });
 
+  await t.step('playground page', async () => {
+    const server = new Server({
+      hostname,
+      port,
+      documentRoot,
+      playground: true,
+    });
+
+    server.start();
+    await wait(100);
+
+    const responseA = await fetch(`${origin}/test.playground`);
+    const contentA = await responseA.text();
+
+    server.stop();
+    await wait(100);
+
+    assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/html');
+    assertStrictEquals(contentA.search('<title>Playground</title>') !== -1, true);
+  });
+
   await t.step('directory index', async () => {
     const server = new Server({
       hostname,
@@ -73,11 +95,14 @@ Deno.test('Server', async (t) => {
     await wait(100);
 
     assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/html');
 
     assertStrictEquals(responseB.status, 200);
+    assertStrictEquals(responseB.headers.get('content-type'), 'text/html');
     assertStrictEquals(contentA, contentB);
 
     assertStrictEquals(responseC.status, 200);
+    assertStrictEquals(responseC.headers.get('content-type'), 'text/html');
     assertStrictEquals(contentA, contentC);
   });
 
@@ -99,28 +124,8 @@ Deno.test('Server', async (t) => {
     await wait(100);
 
     assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/javascript');
     assertStrictEquals(contentA.search('bundled into') !== -1, true);
-  });
-
-  await t.step('playground page', async () => {
-    const server = new Server({
-      hostname,
-      port,
-      documentRoot,
-      playground: true,
-    });
-
-    server.start();
-    await wait(100);
-
-    const responseA = await fetch(`${origin}/test.playground`);
-    const contentA = await responseA.text();
-
-    server.stop();
-    await wait(100);
-
-    assertStrictEquals(responseA.status, 200);
-    assertStrictEquals(contentA.search('<title>Playground</title>') !== -1, true);
   });
 
   await t.step('if the file is not found', async () => {
@@ -145,9 +150,11 @@ Deno.test('Server', async (t) => {
     await wait(100);
 
     assertStrictEquals(responseA.status, 404);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/plain');
     assertStrictEquals(contentA.search('Not Found') !== -1, true);
 
     assertStrictEquals(responseB.status, 404);
+    assertStrictEquals(responseB.headers.get('content-type'), 'text/plain');
     assertStrictEquals(contentB.search('Not Found') !== -1, true);
   });
 });

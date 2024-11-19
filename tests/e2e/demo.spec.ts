@@ -6,6 +6,6 @@ test.describe('demo', () => {
   });
 
   test('TypeScript bundling', async ({ page }) => {
-    await expect(page.locator('body')).toHaveText([/.+bundled into.+/]);
+    await expect(page.locator('body')).toHaveText(/.+bundled into.+/);
   });
 });

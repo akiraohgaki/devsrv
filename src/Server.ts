@@ -1,13 +1,13 @@
 import type { ServerOptions } from './types.ts';
 
 import BuildHelper from './BuildHelper.ts';
-import mimeTypes from './mime-types.ts';
-import playgroundPage from './playground-page.ts';
+import mimeTypes from './mimeTypes.ts';
+import playgroundPage from './playgroundPage.ts';
 
 /**
  * Server class for serving files.
  *
- * @example
+ * @example Basic usage
  * ```ts
  * const server = new Server({
  *   hostname: 'localhost',
@@ -94,49 +94,64 @@ export default class Server {
     const path = new URL(request.url).pathname;
     console.log(`${request.method} ${path}`);
 
-    if (this.#options.bundle && path.endsWith('.bundle.js')) {
-      try {
-        const buildHelper = new BuildHelper();
-        const code = await buildHelper.bundle(this.#options.documentRoot + path.replace('.bundle.js', '.ts'));
-        return this.#response(code, mimeTypes.js, 200);
-      } catch (exception) {
-        console.error(exception instanceof Error ? exception.message : exception);
-        return this.#response('Not Found', mimeTypes.txt, 404);
-      }
+    if (path.endsWith('.playground') && this.#options.playground) {
+      return this.#response(200, mimeTypes.html, playgroundPage);
     }
 
-    if (this.#options.playground && path.endsWith('.playground')) {
-      return this.#response(playgroundPage, mimeTypes.html, 200);
+    if (path.endsWith('.bundle.js') && this.#options.bundle) {
+      const buildHelper = new BuildHelper();
+      const resolvedPath = path.replace(/^(.+)\.bundle\.js$/, '$1.ts');
+      let content: string | null = null;
+
+      try {
+        content = await buildHelper.bundle(this.#options.documentRoot + resolvedPath);
+      } catch (exception) {
+        console.error(exception instanceof Error ? exception.message : exception);
+        return this.#response(404, mimeTypes.txt, 'Not Found');
+      }
+
+      return this.#response(200, mimeTypes.js, content);
     }
 
     if (path !== '/') {
       const resolvedPath = path.endsWith('/') ? path + this.#options.directoryIndex : path;
+      const ext = resolvedPath.split('.').pop() ?? '';
+      const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
+      let content: Uint8Array | null = null;
+
       try {
-        const content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
-        const ext = resolvedPath.split('.').pop() ?? '';
-        return this.#response(content, mimeTypes[ext] ?? mimeTypes.bin, 200);
+        content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
       } catch {
         void 0;
       }
+
+      if (content !== null) {
+        return this.#response(200, mimeType, content);
+      }
     }
 
+    const ext = this.#options.directoryIndex.split('.').pop() ?? '';
+    const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
+    let content: Uint8Array | null = null;
+
     try {
-      const content = await Deno.readFile(`${this.#options.documentRoot}/${this.#options.directoryIndex}`);
-      return this.#response(content, mimeTypes.html, 200);
+      content = await Deno.readFile(this.#options.documentRoot + '/' + this.#options.directoryIndex);
     } catch (exception) {
       console.error(exception instanceof Error ? exception.message : exception);
-      return this.#response('Not Found', mimeTypes.txt, 404);
+      return this.#response(404, mimeTypes.txt, 'Not Found');
     }
+
+    return this.#response(200, mimeType, content);
   }
 
   /**
    * Creates a response object.
    *
-   * @param body - Content body
-   * @param contentType - Content type
    * @param status - HTTP status code
+   * @param contentType - Content type
+   * @param body - Content body
    */
-  #response(body: BodyInit, contentType: string, status: number = 200): Response {
+  #response(status: number, contentType: string, body: BodyInit): Response {
     return new Response(
       body,
       {

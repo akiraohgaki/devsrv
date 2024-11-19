@@ -5,7 +5,7 @@
 import type { ServerOptions } from './mod.ts';
 
 import { Server } from './mod.ts';
-import { args, booleanValue, numberValue, stringValue } from './src/cli-util.ts';
+import { args, booleanValue, numberValue, stringValue } from './src/cli.ts';
 
 try {
   const options: ServerOptions = {

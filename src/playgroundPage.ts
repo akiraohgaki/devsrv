@@ -97,12 +97,7 @@ async function runCode() {
     await import(url);
   } catch (exception) {
     console.error(exception);
-
-    if (exception instanceof Error) {
-      addLog(exception.message);
-    } else {
-      addLog(exception);
-    }
+    addLog(exception instanceof Error ? exception.message : exception);
   }
 }
 
