@@ -67,6 +67,7 @@ Deno.test('Server', async (t) => {
     await wait(100);
 
     assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/html');
     assertStrictEquals(contentA.search('<title>Playground</title>') !== -1, true);
   });
 
@@ -94,11 +95,14 @@ Deno.test('Server', async (t) => {
     await wait(100);
 
     assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/html');
 
     assertStrictEquals(responseB.status, 200);
+    assertStrictEquals(responseB.headers.get('content-type'), 'text/html');
     assertStrictEquals(contentA, contentB);
 
     assertStrictEquals(responseC.status, 200);
+    assertStrictEquals(responseC.headers.get('content-type'), 'text/html');
     assertStrictEquals(contentA, contentC);
   });
 
@@ -120,6 +124,7 @@ Deno.test('Server', async (t) => {
     await wait(100);
 
     assertStrictEquals(responseA.status, 200);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/javascript');
     assertStrictEquals(contentA.search('bundled into') !== -1, true);
   });
 
@@ -145,9 +150,11 @@ Deno.test('Server', async (t) => {
     await wait(100);
 
     assertStrictEquals(responseA.status, 404);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/plain');
     assertStrictEquals(contentA.search('Not Found') !== -1, true);
 
     assertStrictEquals(responseB.status, 404);
+    assertStrictEquals(responseB.headers.get('content-type'), 'text/plain');
     assertStrictEquals(contentB.search('Not Found') !== -1, true);
   });
 });
