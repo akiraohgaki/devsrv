@@ -128,7 +128,7 @@ Deno.test('Server', async (t) => {
     assertStrictEquals(contentA.search('bundled into') !== -1, true);
   });
 
-  await t.step('if the file is not found', async () => {
+  await t.step('file not found', async () => {
     const server = new Server({
       hostname,
       port,
@@ -156,5 +156,27 @@ Deno.test('Server', async (t) => {
     assertStrictEquals(responseB.status, 404);
     assertStrictEquals(responseB.headers.get('content-type'), 'text/plain');
     assertStrictEquals(contentB.search('Not Found') !== -1, true);
+  });
+
+  await t.step('internal server error', async () => {
+    const server = new Server({
+      hostname,
+      port,
+      documentRoot,
+      bundle: true,
+    });
+
+    server.start();
+    await wait(100);
+
+    const responseA = await fetch(`${origin}/error.bundle.js`);
+    const contentA = await responseA.text();
+
+    server.stop();
+    await wait(100);
+
+    assertStrictEquals(responseA.status, 500);
+    assertStrictEquals(responseA.headers.get('content-type'), 'text/plain');
+    assertStrictEquals(contentA.search('Internal Server Error') !== -1, true);
   });
 });

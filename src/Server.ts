@@ -91,57 +91,72 @@ export default class Server {
    * @param request - Request object
    */
   async #requestHandler(request: Request): Promise<Response> {
-    const path = new URL(request.url).pathname;
-    console.log(`${request.method} ${path}`);
+    try {
+      const path = new URL(request.url).pathname;
 
-    if (path.endsWith('.playground') && this.#options.playground) {
-      return this.#response(200, mimeTypes.html, playgroundPage);
-    }
+      console.log(`${request.method} ${path}`);
 
-    if (path.endsWith('.bundle.js') && this.#options.bundle) {
-      const buildHelper = new BuildHelper();
-      const resolvedPath = path.replace(/^(.+)\.bundle\.js$/, '$1.ts');
-      let content: string | null = null;
+      if (path.endsWith('.playground') && this.#options.playground) {
+        return this.#response(200, mimeTypes.html, playgroundPage);
+      }
 
-      try {
-        content = await buildHelper.bundle(this.#options.documentRoot + resolvedPath);
-      } catch (exception) {
-        console.error(exception instanceof Error ? exception.message : exception);
+      if (path.endsWith('.bundle.js') && this.#options.bundle) {
+        const resolvedPath = this.#options.documentRoot + path.replace(/^(.+)\.bundle\.js$/, '$1.ts');
+
+        if (await this.#fileExists(resolvedPath)) {
+          const buildHelper = new BuildHelper();
+          const content = await buildHelper.bundle(resolvedPath);
+
+          return this.#response(200, mimeTypes.js, content);
+        } else {
+          return this.#response(404, mimeTypes.txt, 'Not Found');
+        }
+      }
+
+      let resolvedPath = '';
+      if (path === '/') {
+        resolvedPath = this.#options.documentRoot + '/' + this.#options.directoryIndex;
+      } else if (path.endsWith('/')) {
+        resolvedPath = this.#options.documentRoot + path + this.#options.directoryIndex;
+        if (!(await this.#fileExists(resolvedPath))) {
+          resolvedPath = this.#options.documentRoot + '/' + this.#options.directoryIndex;
+        }
+      } else {
+        resolvedPath = this.#options.documentRoot + path;
+        if (!(await this.#fileExists(resolvedPath))) {
+          resolvedPath = this.#options.documentRoot + '/' + this.#options.directoryIndex;
+        }
+      }
+
+      if (await this.#fileExists(resolvedPath)) {
+        const ext = resolvedPath.split('.').pop() ?? '';
+        const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
+        const content = await Deno.readFile(resolvedPath);
+
+        return this.#response(200, mimeType, content);
+      } else {
         return this.#response(404, mimeTypes.txt, 'Not Found');
       }
-
-      return this.#response(200, mimeTypes.js, content);
-    }
-
-    if (path !== '/') {
-      const resolvedPath = path.endsWith('/') ? path + this.#options.directoryIndex : path;
-      const ext = resolvedPath.split('.').pop() ?? '';
-      const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
-      let content: Uint8Array | null = null;
-
-      try {
-        content = await Deno.readFile(this.#options.documentRoot + resolvedPath);
-      } catch {
-        void 0;
-      }
-
-      if (content !== null) {
-        return this.#response(200, mimeType, content);
-      }
-    }
-
-    const ext = this.#options.directoryIndex.split('.').pop() ?? '';
-    const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
-    let content: Uint8Array | null = null;
-
-    try {
-      content = await Deno.readFile(this.#options.documentRoot + '/' + this.#options.directoryIndex);
     } catch (exception) {
       console.error(exception instanceof Error ? exception.message : exception);
-      return this.#response(404, mimeTypes.txt, 'Not Found');
-    }
 
-    return this.#response(200, mimeType, content);
+      return this.#response(500, mimeTypes.txt, 'Internal Server Error');
+    }
+  }
+
+  /**
+   * Checks if a file exists.
+   *
+   * @param path - Path to check
+   */
+  async #fileExists(path: string): Promise<boolean> {
+    let result = false;
+    try {
+      result = (await Deno.stat(path)).isFile;
+    } catch {
+      void 0;
+    }
+    return result;
   }
 
   /**
