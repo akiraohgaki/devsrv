@@ -88,8 +88,11 @@ Deno.test('Server', async (t) => {
     const responseB = await fetch(`${origin}/index.html`);
     const contentB = await responseB.text();
 
-    const responseC = await fetch(`${origin}/abcdef.html`);
+    const responseC = await fetch(`${origin}/abcdef/`);
     const contentC = await responseC.text();
+
+    const responseD = await fetch(`${origin}/abcdef`);
+    const contentD = await responseD.text();
 
     server.stop();
     await wait(100);
@@ -104,6 +107,10 @@ Deno.test('Server', async (t) => {
     assertStrictEquals(responseC.status, 200);
     assertStrictEquals(responseC.headers.get('content-type'), 'text/html');
     assertStrictEquals(contentA, contentC);
+
+    assertStrictEquals(responseD.status, 200);
+    assertStrictEquals(responseD.headers.get('content-type'), 'text/html');
+    assertStrictEquals(contentA, contentD);
   });
 
   await t.step('TypeScript bundling', async () => {
