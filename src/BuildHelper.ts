@@ -34,7 +34,7 @@ export default class BuildHelper {
       entryPoints: [entryPoint],
       write: false,
       bundle: true,
-      platform: 'browser',
+      platform: 'neutral',
       format: 'esm',
       target: 'esnext',
       minify: false,
