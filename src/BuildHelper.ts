@@ -29,23 +29,27 @@ export default class BuildHelper {
     entryPoint: string,
     options: Partial<BuildHelperBundleOptions> = {},
   ): Promise<string> {
-    const result = await esbuild.build({
-      plugins: [...denoPlugins()],
-      entryPoints: [entryPoint],
-      write: false,
-      bundle: true,
-      platform: 'neutral',
-      format: 'esm',
-      target: 'esnext',
-      minify: false,
-      sourcemap: false,
-      treeShaking: true,
-      ...options,
-    });
+    try {
+      const result = await esbuild.build({
+        plugins: [...denoPlugins()],
+        entryPoints: [entryPoint],
+        write: false,
+        bundle: true,
+        platform: 'neutral',
+        format: 'esm',
+        target: 'esnext',
+        minify: false,
+        sourcemap: false,
+        treeShaking: true,
+        ...options,
+      });
 
-    await esbuild.stop();
-
-    return result.outputFiles[0].text;
+      return result.outputFiles[0].text;
+    } catch (exception) {
+      throw exception;
+    } finally {
+      await esbuild.stop();
+    }
   }
 
   /**
