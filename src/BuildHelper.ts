@@ -1,6 +1,6 @@
 import type { BuildHelperBundleOptions } from './types.ts';
 
-import * as esbuild from 'https://deno.land/x/esbuild@v0.24.0/mod.js';
+import * as esbuild from 'esbuild';
 import { denoPlugins } from '@luca/esbuild-deno-loader';
 import $ from '@david/dax';
 
