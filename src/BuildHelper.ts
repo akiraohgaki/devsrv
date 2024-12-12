@@ -1,6 +1,7 @@
 import type { BuildHelperBundleOptions } from './types.ts';
 
-import { bundle } from '@deno/emit';
+import * as esbuild from 'esbuild';
+import { denoPlugins } from '@luca/esbuild-deno-loader';
 import $ from '@david/dax';
 
 /**
@@ -28,11 +29,23 @@ export default class BuildHelper {
     entryPoint: string,
     options: Partial<BuildHelperBundleOptions> = {},
   ): Promise<string> {
-    const result = await bundle(entryPoint, {
+    const result = await esbuild.build({
+      plugins: [...denoPlugins()],
+      entryPoints: [entryPoint],
+      write: false,
+      bundle: true,
+      platform: 'neutral',
+      format: 'esm',
+      target: 'esnext',
       minify: false,
+      sourcemap: false,
+      treeShaking: true,
       ...options,
     });
-    return result.code;
+
+    await esbuild.stop();
+
+    return result.outputFiles[0].text;
   }
 
   /**
