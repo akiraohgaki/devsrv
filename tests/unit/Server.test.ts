@@ -1,4 +1,4 @@
-import { assertStrictEquals } from '@std/assert';
+import { assertEquals } from '@std/assert';
 
 import { Server } from '../../mod.ts';
 
@@ -45,8 +45,8 @@ Deno.test('Server', async (t) => {
       }
     }
 
-    assertStrictEquals(isRunningA, true);
-    assertStrictEquals(isRunningB, false);
+    assertEquals(isRunningA, true);
+    assertEquals(isRunningB, false);
   });
 
   await t.step('playground page', async () => {
@@ -66,9 +66,9 @@ Deno.test('Server', async (t) => {
     server.stop();
     await wait(100);
 
-    assertStrictEquals(responseA.status, 200);
-    assertStrictEquals(responseA.headers.get('content-type'), 'text/html');
-    assertStrictEquals(contentA.search('<title>Playground</title>') !== -1, true);
+    assertEquals(responseA.status, 200);
+    assertEquals(responseA.headers.get('content-type'), 'text/html');
+    assertEquals(contentA.search('<title>Playground</title>') !== -1, true);
   });
 
   await t.step('directory index', async () => {
@@ -97,20 +97,20 @@ Deno.test('Server', async (t) => {
     server.stop();
     await wait(100);
 
-    assertStrictEquals(responseA.status, 200);
-    assertStrictEquals(responseA.headers.get('content-type'), 'text/html');
+    assertEquals(responseA.status, 200);
+    assertEquals(responseA.headers.get('content-type'), 'text/html');
 
-    assertStrictEquals(responseB.status, 200);
-    assertStrictEquals(responseB.headers.get('content-type'), 'text/html');
-    assertStrictEquals(contentA, contentB);
+    assertEquals(responseB.status, 200);
+    assertEquals(responseB.headers.get('content-type'), 'text/html');
+    assertEquals(contentA, contentB);
 
-    assertStrictEquals(responseC.status, 200);
-    assertStrictEquals(responseC.headers.get('content-type'), 'text/html');
-    assertStrictEquals(contentA, contentC);
+    assertEquals(responseC.status, 200);
+    assertEquals(responseC.headers.get('content-type'), 'text/html');
+    assertEquals(contentA, contentC);
 
-    assertStrictEquals(responseD.status, 200);
-    assertStrictEquals(responseD.headers.get('content-type'), 'text/html');
-    assertStrictEquals(contentA, contentD);
+    assertEquals(responseD.status, 200);
+    assertEquals(responseD.headers.get('content-type'), 'text/html');
+    assertEquals(contentA, contentD);
   });
 
   await t.step('TypeScript bundling', async () => {
@@ -130,9 +130,9 @@ Deno.test('Server', async (t) => {
     server.stop();
     await wait(100);
 
-    assertStrictEquals(responseA.status, 200);
-    assertStrictEquals(responseA.headers.get('content-type'), 'text/javascript');
-    assertStrictEquals(contentA.search('bundled into') !== -1, true);
+    assertEquals(responseA.status, 200);
+    assertEquals(responseA.headers.get('content-type'), 'text/javascript');
+    assertEquals(contentA.search('bundled into') !== -1, true);
   });
 
   await t.step('file not found', async () => {
@@ -156,13 +156,13 @@ Deno.test('Server', async (t) => {
     server.stop();
     await wait(100);
 
-    assertStrictEquals(responseA.status, 404);
-    assertStrictEquals(responseA.headers.get('content-type'), 'text/plain');
-    assertStrictEquals(contentA.search('Not Found') !== -1, true);
+    assertEquals(responseA.status, 404);
+    assertEquals(responseA.headers.get('content-type'), 'text/plain');
+    assertEquals(contentA.search('Not Found') !== -1, true);
 
-    assertStrictEquals(responseB.status, 404);
-    assertStrictEquals(responseB.headers.get('content-type'), 'text/plain');
-    assertStrictEquals(contentB.search('Not Found') !== -1, true);
+    assertEquals(responseB.status, 404);
+    assertEquals(responseB.headers.get('content-type'), 'text/plain');
+    assertEquals(contentB.search('Not Found') !== -1, true);
   });
 
   await t.step('internal server error', async () => {
@@ -182,8 +182,8 @@ Deno.test('Server', async (t) => {
     server.stop();
     await wait(100);
 
-    assertStrictEquals(responseA.status, 500);
-    assertStrictEquals(responseA.headers.get('content-type'), 'text/plain');
-    assertStrictEquals(contentA.search('Internal Server Error') !== -1, true);
+    assertEquals(responseA.status, 500);
+    assertEquals(responseA.headers.get('content-type'), 'text/plain');
+    assertEquals(contentA.search('Internal Server Error') !== -1, true);
   });
 });
