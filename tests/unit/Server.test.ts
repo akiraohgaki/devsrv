@@ -176,7 +176,7 @@ Deno.test('Server', async (t) => {
     server.start();
     await wait(100);
 
-    const responseA = await fetch(`${origin}/external.bundle.js`);
+    const responseA = await fetch(`${origin}/error.bundle.js`);
     const contentA = await responseA.text();
 
     server.stop();
