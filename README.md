@@ -37,9 +37,10 @@ deno run jsr:@akiraohgaki/devsrv/bundle [OPTIONS] [ENTRY_POINT] [OUT_FILE]
 | `[ENTRY_POINT]` | Entry point to bundle | none    |
 | `[OUT_FILE]`    | Output file           | none    |
 
-| Options                 | Description  | Default |
-| ----------------------- | ------------ | ------- |
-| `--minify <true/false>` | Minification | false   |
+| Options                        | Description                                                        | Default |
+| ------------------------------ | ------------------------------------------------------------------ | ------- |
+| `--minify <true/false>`        | Minification                                                       | false   |
+| `--externals <PACKAGES/PATHS>` | A comma-separated list of packages and paths that allowed wildcard | none    |
 
 ### Build helper program: export
 
@@ -80,6 +81,7 @@ Bundle scripts into single JavaScript file.
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/bundle \
   --minify=true \
+  --externals='package, jsr:*, npm:*, https:*, ./node_modules/*' \
   ./src/main.ts ./public/main.bundle.js
 ```
 
