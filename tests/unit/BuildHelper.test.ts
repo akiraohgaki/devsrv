@@ -24,7 +24,7 @@ Deno.test('BuildHelper', async (t) => {
     await buildHelper.bundleFile(
       'tests/demo/external.ts',
       'tmp/demo/external.bundle.js',
-      { externals: ['@scope/*', 'jsr:*', 'npm:*', 'https:*', './node_modules/*'] },
+      { externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'] },
     );
 
     assertEquals((await Deno.stat('tmp/demo/main.bundle.js')).isFile, true);
@@ -39,7 +39,7 @@ Deno.test('BuildHelper', async (t) => {
       minify: true,
     });
     const codeExternalsExcluded = await buildHelper.bundle('tests/demo/external.ts', {
-      externals: ['@scope/*', 'jsr:*', 'npm:*', 'https:*', './node_modules/*'],
+      externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'],
     });
 
     assertEquals(code !== codeMin, true);
