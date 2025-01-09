@@ -36,4 +36,8 @@ export interface BuildHelperBundleOptions {
    * Minification.
    */
   minify: boolean;
+  /**
+   * External modules.
+   */
+  externals: Array<string>;
 }

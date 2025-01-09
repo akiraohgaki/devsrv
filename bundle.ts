@@ -5,13 +5,14 @@
 import type { BuildHelperBundleOptions } from './mod.ts';
 
 import { BuildHelper } from './mod.ts';
-import { args, booleanValue, stringValue } from './src/cli.ts';
+import { args, arrayValue, booleanValue, stringValue } from './src/cli.ts';
 
 try {
   const entryPoint = stringValue(args._[0], '');
   const outFile = stringValue(args._[1], '');
   const options: BuildHelperBundleOptions = {
     minify: booleanValue(args.minify, false),
+    externals: arrayValue(args.externals, []),
   };
 
   console.log('entryPoint:', entryPoint);

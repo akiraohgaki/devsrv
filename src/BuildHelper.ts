@@ -11,9 +11,14 @@ import $ from '@david/dax';
  * ```ts
  * const buildHelper = new BuildHelper();
  *
- * const code = await buildHelper.bundle('src/main.ts', { minify: true });
+ * const bundleOptions = {
+ *   minify: true,
+ *   externals: ['package', 'jsr:*', 'npm:*', 'https:*', './node_modules/*'],
+ * };
  *
- * await buildHelper.bundleFile('src/main.ts', 'dist/main.bundle.js', { minify: true });
+ * const code = await buildHelper.bundle('src/main.ts', bundleOptions);
+ *
+ * await buildHelper.bundleFile('src/main.ts', 'dist/main.bundle.js', bundleOptions);
  *
  * await buildHelper.export('public', ['src/index.html', 'src/assets']);
  * ```
@@ -38,10 +43,10 @@ export default class BuildHelper {
         platform: 'neutral',
         format: 'esm',
         target: 'esnext',
-        minify: false,
+        minify: options.minify ?? false,
         sourcemap: false,
         treeShaking: true,
-        ...options,
+        external: options.externals ?? [],
       });
 
       return result.outputFiles[0].text;
