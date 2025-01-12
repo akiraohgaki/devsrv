@@ -73,10 +73,13 @@
     ]
   },
   "tasks": {
-    "check": "deno fmt && deno lint && deno check mod.ts serve.ts bundle.ts export.ts",
-    "build": "deno task build:setup && deno task build:bundle && deno task build:teardown",
+    "check": "deno task check:setup && deno task check:check && deno task check:teardown",
+    "check:setup": "deno outdated && deno fmt && deno lint",
+    "check:check": "deno check mod.ts serve.ts bundle.ts export.ts",
+    "check:teardown": "echo 'Skip task check:teardown'",
+    "build": "deno task build:setup && deno task build:build && deno task build:teardown",
     "build:setup": "deno run -A export.ts --includes='tests/demo/index.html' tmp/demo",
-    "build:bundle": "deno run -A bundle.ts --minify=true tests/demo/main.ts tmp/demo/main.bundle.js",
+    "build:build": "deno run -A bundle.ts --minify=true tests/demo/main.ts tmp/demo/main.bundle.js",
     "build:teardown": "echo 'Skip task build:teardown'",
     "test": "deno task test:setup && deno task test:unit && deno task test:e2e && deno task test:teardown",
     "test:setup": "deno run -A npm:playwright install --with-deps",
