@@ -132,7 +132,7 @@ test.describe('playground', () => {
     ]);
   });
 
-  test('playground.wait', async ({ page }) => {
+  test('playground.sleep', async ({ page }) => {
     const code = `
       playground.logs.add(0);
 
@@ -140,7 +140,7 @@ test.describe('playground', () => {
         playground.logs.add(1);
       }, 50);
 
-      await playground.wait(100);
+      await playground.sleep(100);
 
       playground.logs.add(2);
     `;

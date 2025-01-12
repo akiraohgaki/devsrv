@@ -7,7 +7,7 @@ const port = 3333;
 const documentRoot = './tests/demo';
 const origin = `http://${hostname}:${port}`;
 
-async function wait(ms: number): Promise<void> {
+async function sleep(ms: number): Promise<void> {
   await new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
@@ -20,7 +20,7 @@ Deno.test('Server', async (t) => {
     let isRunningA = false;
 
     server.start();
-    await wait(100);
+    await sleep(100);
 
     try {
       server.start();
@@ -34,7 +34,7 @@ Deno.test('Server', async (t) => {
     let isRunningB = false;
 
     server.stop();
-    await wait(100);
+    await sleep(100);
 
     try {
       server.stop();
@@ -58,13 +58,13 @@ Deno.test('Server', async (t) => {
     });
 
     server.start();
-    await wait(100);
+    await sleep(100);
 
     const responseA = await fetch(`${origin}/test.playground`);
     const contentA = await responseA.text();
 
     server.stop();
-    await wait(100);
+    await sleep(100);
 
     assertEquals(responseA.status, 200);
     assertEquals(responseA.headers.get('content-type'), 'text/html');
@@ -80,7 +80,7 @@ Deno.test('Server', async (t) => {
     });
 
     server.start();
-    await wait(100);
+    await sleep(100);
 
     const responseA = await fetch(`${origin}/`);
     const contentA = await responseA.text();
@@ -95,7 +95,7 @@ Deno.test('Server', async (t) => {
     const contentD = await responseD.text();
 
     server.stop();
-    await wait(100);
+    await sleep(100);
 
     assertEquals(responseA.status, 200);
     assertEquals(responseA.headers.get('content-type'), 'text/html');
@@ -122,13 +122,13 @@ Deno.test('Server', async (t) => {
     });
 
     server.start();
-    await wait(100);
+    await sleep(100);
 
     const responseA = await fetch(`${origin}/main.bundle.js`);
     const contentA = await responseA.text();
 
     server.stop();
-    await wait(100);
+    await sleep(100);
 
     assertEquals(responseA.status, 200);
     assertEquals(responseA.headers.get('content-type'), 'text/javascript');
@@ -145,7 +145,7 @@ Deno.test('Server', async (t) => {
     });
 
     server.start();
-    await wait(100);
+    await sleep(100);
 
     const responseA = await fetch(`${origin}/abcdef.html`);
     const contentA = await responseA.text();
@@ -154,7 +154,7 @@ Deno.test('Server', async (t) => {
     const contentB = await responseB.text();
 
     server.stop();
-    await wait(100);
+    await sleep(100);
 
     assertEquals(responseA.status, 404);
     assertEquals(responseA.headers.get('content-type'), 'text/plain');
@@ -174,13 +174,13 @@ Deno.test('Server', async (t) => {
     });
 
     server.start();
-    await wait(100);
+    await sleep(100);
 
     const responseA = await fetch(`${origin}/error.bundle.js`);
     const contentA = await responseA.text();
 
     server.stop();
-    await wait(100);
+    await sleep(100);
 
     assertEquals(responseA.status, 500);
     assertEquals(responseA.headers.get('content-type'), 'text/plain');

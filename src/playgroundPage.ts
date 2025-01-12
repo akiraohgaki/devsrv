@@ -165,8 +165,10 @@ function clearLogs() {
   getLogs().innerHTML = '';
 }
 
-async function wait(ms) {
-  await new Promise((resolve) => setTimeout(resolve, ms));
+async function sleep(ms) {
+  await new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 globalThis.playground = {
@@ -186,7 +188,7 @@ globalThis.playground = {
     add: addLog,
     clear: clearLogs,
   },
-  wait: wait,
+  sleep: sleep,
 };
 document.querySelector('[data-action="code.run"]').addEventListener('click', runCode);
 document.querySelector('[data-action="code.clear"]').addEventListener('click', clearCode);
@@ -202,7 +204,7 @@ const exampleCode: string = `
 //import * as mod from 'http://localhost:3000/mod.bundle.js';
 
 // Helper functions available.
-const { code, preview, logs, wait } = globalThis.playground;
+const { code, preview, logs, sleep } = globalThis.playground;
 
 // For example
 
@@ -216,7 +218,7 @@ button.addEventListener('click', () => {
 
 logs.add(preview.get().innerHTML);
 
-await wait(30000);
+await sleep(30000);
 
 const codeContent = code.get().textContent;
 
@@ -224,7 +226,7 @@ code.clear();
 preview.clear();
 logs.clear();
 
-await wait(1000);
+await sleep(1000);
 
 code.set(codeContent);
 `.trim();
