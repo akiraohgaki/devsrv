@@ -25,6 +25,11 @@ import $ from '@david/dax';
  */
 export default class BuildHelper {
   /**
+   * Creates a new instance of the BuildHelper class.
+   */
+  constructor() {}
+
+  /**
    * Bundles the scripts.
    *
    * @param entryPoint - The entry point to bundle.

@@ -25,7 +25,9 @@ import playgroundPage from './playgroundPage.ts';
  */
 export default class Server {
   #options: ServerOptions;
+
   #server: Deno.HttpServer | null = null;
+
   #abortController: AbortController | null = null;
 
   /**
