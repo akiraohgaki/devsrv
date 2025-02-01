@@ -5,4 +5,4 @@ template.innerHTML = `
   <p>Also try <a href=".playground">Code playground</a>.</p>
 `;
 
-export default template;
+export { template };

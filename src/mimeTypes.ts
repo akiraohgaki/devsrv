@@ -1,7 +1,7 @@
 /**
  * MIME Types.
  */
-const mimeTypes: Record<string, string> = {
+export const mimeTypes: Record<string, string> = {
   // Text
   'txt': 'text/plain',
   'htm': 'text/html',
@@ -49,5 +49,3 @@ const mimeTypes: Record<string, string> = {
   'xml': 'application/xml',
   'wasm': 'application/wasm',
 };
-
-export default mimeTypes;

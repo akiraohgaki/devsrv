@@ -234,7 +234,7 @@ code.set(codeContent);
 /**
  * Playground page.
  */
-const playgroundPage: string = `
+export const playgroundPage: string = `
 <!DOCTYPE html>
 <html lang="en">
 
@@ -279,5 +279,3 @@ const playgroundPage: string = `
 
 </html>
 `;
-
-export default playgroundPage;

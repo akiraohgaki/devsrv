@@ -1,8 +1,8 @@
 import type { ServerOptions } from './types.ts';
 
-import BuildHelper from './BuildHelper.ts';
-import mimeTypes from './mimeTypes.ts';
-import playgroundPage from './playgroundPage.ts';
+import { BuildHelper } from './BuildHelper.ts';
+import { mimeTypes } from './mimeTypes.ts';
+import { playgroundPage } from './playgroundPage.ts';
 
 /**
  * Server class for serving files.
@@ -23,7 +23,7 @@ import playgroundPage from './playgroundPage.ts';
  * server.stop();
  * ```
  */
-export default class Server {
+export class Server {
   #options: ServerOptions;
 
   #server: Deno.HttpServer | null = null;

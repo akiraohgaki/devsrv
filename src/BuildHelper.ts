@@ -23,7 +23,7 @@ import $ from '@david/dax';
  * await buildHelper.export('public', ['src/index.html', 'src/assets']);
  * ```
  */
-export default class BuildHelper {
+export class BuildHelper {
   /**
    * Creates a new instance of the BuildHelper class.
    */

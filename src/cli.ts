@@ -3,7 +3,7 @@ import { parseArgs } from '@std/cli/parse-args';
 /**
  * An object containing the parsed CLI arguments.
  */
-const args = parseArgs(Deno.args);
+export const args = parseArgs(Deno.args);
 
 /**
  * Converts a CLI argument value to a boolean value.
@@ -11,7 +11,7 @@ const args = parseArgs(Deno.args);
  * @param value - The value of a CLI argument.
  * @param defaultValue - The default value to return if the argument is invalid or undefined.
  */
-function booleanValue(value: unknown, defaultValue: boolean): boolean {
+export function booleanValue(value: unknown, defaultValue: boolean): boolean {
   if (typeof value === 'boolean') {
     return value;
   }
@@ -27,7 +27,7 @@ function booleanValue(value: unknown, defaultValue: boolean): boolean {
  * @param value - The value of a CLI argument.
  * @param defaultValue - The default value to return if the argument is invalid or undefined.
  */
-function numberValue(value: unknown, defaultValue: number): number {
+export function numberValue(value: unknown, defaultValue: number): number {
   if (typeof value === 'number') {
     return value;
   }
@@ -43,7 +43,7 @@ function numberValue(value: unknown, defaultValue: number): number {
  * @param value - The value of a CLI argument.
  * @param defaultValue - The default value to return if the argument is invalid or undefined.
  */
-function stringValue(value: unknown, defaultValue: string): string {
+export function stringValue(value: unknown, defaultValue: string): string {
   if (typeof value === 'string') {
     return value;
   }
@@ -59,7 +59,7 @@ function stringValue(value: unknown, defaultValue: string): string {
  * @param value - The value of a CLI argument.
  * @param defaultValue - The default value to return if the argument is invalid or undefined.
  */
-function arrayValue(value: unknown, defaultValue: Array<string>): Array<string> {
+export function arrayValue(value: unknown, defaultValue: Array<string>): Array<string> {
   if (Array.isArray(value)) {
     return value.map((item) => '' + item);
   }
@@ -68,5 +68,3 @@ function arrayValue(value: unknown, defaultValue: Array<string>): Array<string> 
   }
   return defaultValue;
 }
-
-export { args, arrayValue, booleanValue, numberValue, stringValue };
