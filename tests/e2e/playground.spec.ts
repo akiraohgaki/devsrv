@@ -7,7 +7,7 @@ test.describe('playground', () => {
 
   test('code running', async ({ page, baseURL }) => {
     const code = `
-      import template from '${baseURL}/template.bundle.js';
+      import { template } from '${baseURL}/template.bundle.js';
 
       playground.preview.set(template.content);
 
