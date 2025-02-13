@@ -5,22 +5,23 @@
 import type { ServerOptions } from './mod.ts';
 
 import { Server } from './mod.ts';
-import { args, booleanValue, numberValue, stringValue } from './src/cli.ts';
+import { CliUtil } from './src/CliUtil.ts';
 
 try {
+  const cliUtil = new CliUtil();
+
   const options: ServerOptions = {
-    hostname: stringValue(args.h ?? args.host, '0.0.0.0'),
-    port: numberValue(args.p ?? args.port, 3000),
-    directoryIndex: stringValue(args['directory-index'], 'index.html'),
-    bundle: booleanValue(args.bundle, true),
-    playground: booleanValue(args.playground, true),
-    documentRoot: stringValue(args._[0], '.'),
+    hostname: cliUtil.toString(cliUtil.args.h ?? cliUtil.args.host, '0.0.0.0'),
+    port: cliUtil.toNumber(cliUtil.args.p ?? cliUtil.args.port, 3000),
+    directoryIndex: cliUtil.toString(cliUtil.args['directory-index'], 'index.html'),
+    bundle: cliUtil.toBoolean(cliUtil.args.bundle, true),
+    playground: cliUtil.toBoolean(cliUtil.args.playground, true),
+    documentRoot: cliUtil.toString(cliUtil.args._[0], '.'),
   };
 
   console.info('options:', options);
 
   const server = new Server(options);
-
   server.start();
 } catch (exception) {
   console.error(exception instanceof Error ? exception.message : exception);
