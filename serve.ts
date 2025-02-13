@@ -17,7 +17,7 @@ try {
     documentRoot: stringValue(args._[0], '.'),
   };
 
-  console.log('options:', options);
+  console.info('options:', options);
 
   const server = new Server(options);
 

@@ -15,9 +15,9 @@ try {
     externals: arrayValue(args.externals, []),
   };
 
-  console.log('entryPoint:', entryPoint);
-  console.log('outFile:', outFile);
-  console.log('options:', options);
+  console.info('entryPoint:', entryPoint);
+  console.info('outFile:', outFile);
+  console.info('options:', options);
 
   if (!entryPoint) {
     throw new Error('entryPoint must be set.');

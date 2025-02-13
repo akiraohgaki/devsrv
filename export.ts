@@ -9,8 +9,8 @@ try {
   const outDirectory = stringValue(args._[0], '');
   const includes = arrayValue(args.includes, []);
 
-  console.log('outDirectory:', outDirectory);
-  console.log('includes:', includes);
+  console.info('outDirectory:', outDirectory);
+  console.info('includes:', includes);
 
   if (!outDirectory) {
     throw new Error('outDirectory must be set.');

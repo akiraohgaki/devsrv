@@ -96,7 +96,7 @@ export class Server {
     try {
       const path = new URL(request.url).pathname;
 
-      console.log(`${request.method} ${path}`);
+      console.info(`${request.method} ${path}`);
 
       if (path.endsWith('.playground') && this.#options.playground) {
         return this.#response(200, mimeTypes.html, playgroundPage);
