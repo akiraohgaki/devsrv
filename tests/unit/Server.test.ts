@@ -1,4 +1,4 @@
-import { assertEquals } from '@std/assert';
+import { assert, assertEquals, assertRejects, assertThrows } from '@std/assert';
 
 import { Server } from '../../mod.ts';
 
@@ -8,80 +8,65 @@ const documentRoot = './tests/demo';
 const origin = `http://${hostname}:${port}`;
 
 async function sleep(ms: number): Promise<void> {
-  await new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+  await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 Deno.test('Server', async (t) => {
-  await t.step('start and stop', async () => {
-    const server = new Server();
+  let server: Server;
 
-    let isRunningA = false;
+  await t.step('constructor()', () => {
+    server = new Server();
 
-    server.start();
-    await sleep(100);
-
-    try {
-      server.start();
-    } catch (exception) {
-      if (exception instanceof Error) {
-        console.log(exception.message);
-        isRunningA = exception.message.search('already running') !== -1;
-      }
-    }
-
-    let isRunningB = false;
-
-    server.stop();
-    await sleep(100);
-
-    try {
-      server.stop();
-    } catch (exception) {
-      if (exception instanceof Error) {
-        console.log(exception.message);
-        isRunningB = exception.message.search('not running') === -1;
-      }
-    }
-
-    assertEquals(isRunningA, true);
-    assertEquals(isRunningB, false);
+    assert(server);
   });
 
-  await t.step('playground page', async () => {
-    const server = new Server({
-      hostname,
-      port,
-      documentRoot,
-      playground: true,
-    });
-
+  await t.step('start()', async () => {
     server.start();
+
     await sleep(100);
 
-    const responseA = await fetch(`${origin}/test.playground`);
-    const contentA = await responseA.text();
-
-    server.stop();
-    await sleep(100);
-
-    assertEquals(responseA.status, 200);
-    assertEquals(responseA.headers.get('content-type'), 'text/html');
-    assertEquals(contentA.search('<title>Playground</title>') !== -1, true);
+    assertThrows(() => server.start(), Error);
   });
 
-  await t.step('directory index', async () => {
-    const server = new Server({
+  await t.step('stop()', async () => {
+    server.stop();
+
+    await sleep(100);
+
+    assertThrows(() => server.stop(), Error);
+  });
+});
+
+Deno.test('Web server', async (t) => {
+  let server: Server;
+
+  await t.step('Starts server', async () => {
+    server = new Server({
       hostname,
       port,
-      documentRoot,
       directoryIndex: 'index.html',
+      bundle: true,
+      playground: true,
+      documentRoot,
     });
 
     server.start();
+
     await sleep(100);
 
+    assert((await fetch(origin, { method: 'HEAD' })).ok);
+  });
+
+  await t.step('Playground page', async () => {
+    const response = await fetch(`${origin}/test.playground`);
+    const content = await response.text();
+
+    assertEquals(response.status, 200);
+    assertEquals(response.headers.get('content-type'), 'text/html');
+    assert(content.search('<title>Playground</title>') !== -1);
+  });
+
+  await t.step('Directory index page', async () => {
     const responseA = await fetch(`${origin}/`);
     const contentA = await responseA.text();
 
@@ -93,9 +78,6 @@ Deno.test('Server', async (t) => {
 
     const responseD = await fetch(`${origin}/abcdef`);
     const contentD = await responseD.text();
-
-    server.stop();
-    await sleep(100);
 
     assertEquals(responseA.status, 200);
     assertEquals(responseA.headers.get('content-type'), 'text/html');
@@ -114,76 +96,67 @@ Deno.test('Server', async (t) => {
   });
 
   await t.step('TypeScript bundling', async () => {
-    const server = new Server({
-      hostname,
-      port,
-      documentRoot,
-      bundle: true,
-    });
+    const response = await fetch(`${origin}/main.bundle.js`);
+    const content = await response.text();
 
-    server.start();
-    await sleep(100);
-
-    const responseA = await fetch(`${origin}/main.bundle.js`);
-    const contentA = await responseA.text();
-
-    server.stop();
-    await sleep(100);
-
-    assertEquals(responseA.status, 200);
-    assertEquals(responseA.headers.get('content-type'), 'text/javascript');
-    assertEquals(contentA.search('bundled into') !== -1, true);
+    assertEquals(response.status, 200);
+    assertEquals(response.headers.get('content-type'), 'text/javascript');
+    assert(content.search('bundled into') !== -1);
   });
 
-  await t.step('file not found', async () => {
-    const server = new Server({
-      hostname,
-      port,
-      documentRoot,
-      directoryIndex: 'abcdef.html',
-      bundle: true,
+  await t.step('404 Not Found', async (t) => {
+    await t.step('Directory index page', async () => {
+      const anotherPort = port + 1;
+      const origin = `http://${hostname}:${anotherPort}`;
+
+      const server = new Server({
+        hostname,
+        port: anotherPort,
+        documentRoot,
+        directoryIndex: 'abcdef.html',
+        bundle: true,
+      });
+
+      server.start();
+
+      await sleep(100);
+
+      const response = await fetch(`${origin}/abcdef.html`);
+      const content = await response.text();
+
+      server.stop();
+
+      await sleep(100);
+
+      assertEquals(response.status, 404);
+      assertEquals(response.headers.get('content-type'), 'text/plain');
+      assert(content.search('Not Found') !== -1);
     });
 
-    server.start();
-    await sleep(100);
+    await t.step('TypeScript bundling', async () => {
+      const response = await fetch(`${origin}/abcdef.bundle.js`);
+      const content = await response.text();
 
-    const responseA = await fetch(`${origin}/abcdef.html`);
-    const contentA = await responseA.text();
-
-    const responseB = await fetch(`${origin}/abcdef.bundle.js`);
-    const contentB = await responseB.text();
-
-    server.stop();
-    await sleep(100);
-
-    assertEquals(responseA.status, 404);
-    assertEquals(responseA.headers.get('content-type'), 'text/plain');
-    assertEquals(contentA.search('Not Found') !== -1, true);
-
-    assertEquals(responseB.status, 404);
-    assertEquals(responseB.headers.get('content-type'), 'text/plain');
-    assertEquals(contentB.search('Not Found') !== -1, true);
+      assertEquals(response.status, 404);
+      assertEquals(response.headers.get('content-type'), 'text/plain');
+      assert(content.search('Not Found') !== -1);
+    });
   });
 
-  await t.step('internal server error', async () => {
-    const server = new Server({
-      hostname,
-      port,
-      documentRoot,
-      bundle: true,
-    });
+  await t.step('500 Internal Server Error', async () => {
+    const response = await fetch(`${origin}/error.bundle.js`);
+    const content = await response.text();
 
-    server.start();
-    await sleep(100);
+    assertEquals(response.status, 500);
+    assertEquals(response.headers.get('content-type'), 'text/plain');
+    assert(content.search('Internal Server Error') !== -1);
+  });
 
-    const responseA = await fetch(`${origin}/error.bundle.js`);
-    const contentA = await responseA.text();
-
+  await t.step('Stops server', async () => {
     server.stop();
+
     await sleep(100);
 
-    assertEquals(responseA.status, 500);
-    assertEquals(responseA.headers.get('content-type'), 'text/plain');
-    assertEquals(contentA.search('Internal Server Error') !== -1, true);
+    assertRejects(() => fetch(origin, { method: 'HEAD' }));
   });
 });

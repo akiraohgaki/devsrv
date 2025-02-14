@@ -1,50 +1,74 @@
-import { assertEquals } from '@std/assert';
+import { assert, assertEquals } from '@std/assert';
 
 import { BuildHelper } from '../../mod.ts';
 
 Deno.test('BuildHelper', async (t) => {
-  await t.step('export', async () => {
-    const buildHelper = new BuildHelper();
+  let buildHelper: BuildHelper;
+
+  await t.step('constructor()', () => {
+    buildHelper = new BuildHelper();
+
+    assert(buildHelper);
+  });
+
+  await t.step('export()', async () => {
     await buildHelper.export('tmp/demo', ['tests/demo/index.html']);
 
-    assertEquals((await Deno.stat('tmp/demo/index.html')).isFile, true);
+    assert((await Deno.stat('tmp/demo/index.html')).isFile);
   });
 
-  await t.step('bundleFile', async () => {
-    const buildHelper = new BuildHelper();
-    await buildHelper.bundleFile(
-      'tests/demo/main.ts',
-      'tmp/demo/main.bundle.js',
-    );
-    await buildHelper.bundleFile(
-      'tests/demo/main.ts',
-      'tmp/demo/main.bundle.min.js',
-      { minify: true },
-    );
-    await buildHelper.bundleFile(
-      'tests/demo/external.ts',
-      'tmp/demo/external.bundle.js',
-      { externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'] },
-    );
+  await t.step('bundleFile()', async (t) => {
+    await t.step('without options', async () => {
+      await buildHelper.bundleFile(
+        'tests/demo/main.ts',
+        'tmp/demo/main.bundle.js',
+      );
 
-    assertEquals((await Deno.stat('tmp/demo/main.bundle.js')).isFile, true);
-    assertEquals((await Deno.stat('tmp/demo/main.bundle.min.js')).isFile, true);
-    assertEquals((await Deno.stat('tmp/demo/external.bundle.js')).isFile, true);
+      assert((await Deno.stat('tmp/demo/main.bundle.js')).isFile);
+    });
+
+    await t.step('minify', async () => {
+      await buildHelper.bundleFile(
+        'tests/demo/main.ts',
+        'tmp/demo/main.bundle.min.js',
+        { minify: true },
+      );
+
+      assert((await Deno.stat('tmp/demo/main.bundle.min.js')).isFile);
+    });
+
+    await t.step('externals', async () => {
+      await buildHelper.bundleFile(
+        'tests/demo/external.ts',
+        'tmp/demo/external.bundle.js',
+        { externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'] },
+      );
+
+      assert((await Deno.stat('tmp/demo/external.bundle.js')).isFile);
+    });
   });
 
-  await t.step('bundle', async () => {
-    const buildHelper = new BuildHelper();
-    const code = await buildHelper.bundle('tests/demo/main.ts');
-    const codeMin = await buildHelper.bundle('tests/demo/main.ts', {
-      minify: true,
-    });
-    const codeExternalsExcluded = await buildHelper.bundle('tests/demo/external.ts', {
-      externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'],
+  await t.step('bundle()', async (t) => {
+    await t.step('without options', async () => {
+      const code = await buildHelper.bundle('tests/demo/main.ts');
+
+      assertEquals(await Deno.readTextFile('tmp/demo/main.bundle.js'), code);
     });
 
-    assertEquals(code !== codeMin, true);
-    assertEquals(await Deno.readTextFile('tmp/demo/main.bundle.js'), code);
-    assertEquals(await Deno.readTextFile('tmp/demo/main.bundle.min.js'), codeMin);
-    assertEquals(await Deno.readTextFile('tmp/demo/external.bundle.js'), codeExternalsExcluded);
+    await t.step('minify', async () => {
+      const codeMin = await buildHelper.bundle('tests/demo/main.ts', {
+        minify: true,
+      });
+
+      assertEquals(await Deno.readTextFile('tmp/demo/main.bundle.min.js'), codeMin);
+    });
+
+    await t.step('externals', async () => {
+      const codeExternalsExcluded = await buildHelper.bundle('tests/demo/external.ts', {
+        externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'],
+      });
+
+      assertEquals(await Deno.readTextFile('tmp/demo/external.bundle.js'), codeExternalsExcluded);
+    });
   });
 });
