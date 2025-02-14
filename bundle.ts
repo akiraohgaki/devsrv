@@ -5,19 +5,21 @@
 import type { BuildHelperBundleOptions } from './mod.ts';
 
 import { BuildHelper } from './mod.ts';
-import { args, arrayValue, booleanValue, stringValue } from './src/cli.ts';
+import { CliUtil } from './src/CliUtil.ts';
 
 try {
-  const entryPoint = stringValue(args._[0], '');
-  const outFile = stringValue(args._[1], '');
+  const cliUtil = new CliUtil();
+
+  const entryPoint = cliUtil.toString(cliUtil.args._[0], '');
+  const outFile = cliUtil.toString(cliUtil.args._[1], '');
   const options: BuildHelperBundleOptions = {
-    minify: booleanValue(args.minify, false),
-    externals: arrayValue(args.externals, []),
+    minify: cliUtil.toBoolean(cliUtil.args.minify, false),
+    externals: cliUtil.toArray(cliUtil.args.externals, []),
   };
 
-  console.log('entryPoint:', entryPoint);
-  console.log('outFile:', outFile);
-  console.log('options:', options);
+  console.info('entryPoint:', entryPoint);
+  console.info('outFile:', outFile);
+  console.info('options:', options);
 
   if (!entryPoint) {
     throw new Error('entryPoint must be set.');

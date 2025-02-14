@@ -28,27 +28,23 @@ section {
 [data-content="preview"],
 [data-content="logs"] {
   margin: 1rem 0;
-}
-
-[data-content="preview"],
-[data-content="logs"] {
   padding: 1rem;
   border: 2px solid #cccccc;
   border-radius: 5px;
 }
 
-[data-content="code"] code {
-  display: block;
-  padding: 1rem;
-  border: 2px solid #cccccc;
-  border-radius: 5px;
+[data-content="code"] {
   background-color: #f8f8f8;
   color: #333333;
-  outline: none;
   overflow: auto;
 
-  &:focus {
+  &:has(code:focus) {
     border-color: #0098f1;
+  }
+
+  & code {
+    display: block;
+    outline: none;
   }
 }
 
@@ -56,30 +52,26 @@ button[data-action] {
   appearance: none;
   display: inline-block;
   line-height: 1;
+  min-width: 6rem;
   margin: 0.2rem;
   padding: 0.5rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid #cccccc;
   border-radius: 3px;
-  background-color: #0098f1;
-  color: #ffffff;
+  background-color: #fefefe;
+  color: #333333;
   font-weight: bold;
-  font-size: 0.9rem;
-  text-decoration: none;
   vertical-align: middle;
   white-space: nowrap;
   outline: none;
   cursor: pointer;
 
-  &:hover {
-    background-color: #006abc;
-    color: #ffffff;
+  &:hover,
+  &:focus-visible {
+    border-color: #0098f1;
   }
 
   &:active {
-    position: relative;
-    top: 1px;
-    background-color: #006abc;
-    color: #ffffff;
+    border-color: #333333;
   }
 }
 `;
@@ -229,7 +221,7 @@ logs.clear();
 await sleep(1000);
 
 code.set(codeContent);
-`.trim();
+`;
 
 /**
  * Playground page.
@@ -256,7 +248,7 @@ export const playgroundPage: string = `
   <section>
     <h2>Code</h2>
     <div data-content="code">
-      <pre><code contenteditable="true" spellcheck="false">${exampleCode}</code></pre>
+      <pre><code contenteditable="true" spellcheck="false">${exampleCode.trim()}</code></pre>
     </div>
     <button data-action="code.run">Run</button>
     <button data-action="code.clear">Clear</button>
