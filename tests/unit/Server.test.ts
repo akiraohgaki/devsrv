@@ -157,6 +157,6 @@ Deno.test('Web server', async (t) => {
 
     await sleep(100);
 
-    assertRejects(() => fetch(origin, { method: 'HEAD' }));
+    await assertRejects(async () => await fetch(origin, { method: 'HEAD' }));
   });
 });
