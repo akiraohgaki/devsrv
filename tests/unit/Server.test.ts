@@ -112,9 +112,8 @@ Deno.test('Web server', async (t) => {
       const server = new Server({
         hostname,
         port: anotherPort,
-        documentRoot,
         directoryIndex: 'abcdef.html',
-        bundle: true,
+        documentRoot,
       });
 
       server.start();
