@@ -1,0 +1,72 @@
+:root {
+  font-size: 14px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #fefefe;
+  color: #333333;
+  font: 1rem/1.5 system-ui;
+}
+
+header,
+section {
+  margin: 4rem;
+}
+
+[data-content='code'],
+[data-content='preview'],
+[data-content='logs'] {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 2px solid #cccccc;
+  border-radius: 5px;
+}
+
+[data-content='code'] {
+  background-color: #f8f8f8;
+  color: #333333;
+  overflow: auto;
+
+  &:has(code:focus) {
+    border-color: #0098f1;
+  }
+
+  & code {
+    display: block;
+    outline: none;
+  }
+}
+
+button[data-action] {
+  appearance: none;
+  display: inline-block;
+  line-height: 1;
+  min-width: 6rem;
+  margin: 0.2rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #cccccc;
+  border-radius: 3px;
+  background-color: #fefefe;
+  color: #333333;
+  font-weight: bold;
+  vertical-align: middle;
+  white-space: nowrap;
+  outline: none;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    border-color: #0098f1;
+  }
+
+  &:active {
+    border-color: #333333;
+  }
+}

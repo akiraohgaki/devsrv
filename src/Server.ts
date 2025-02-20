@@ -2,7 +2,8 @@ import type { ServerOptions } from './types.ts';
 
 import { BuildHelper } from './BuildHelper.ts';
 import { mimeTypes } from './mimeTypes.ts';
-import { playgroundPage } from './playgroundPage.ts';
+
+let playgroundPage: string | null = null;
 
 /**
  * Server class for serving files.
@@ -99,7 +100,8 @@ export class Server {
       console.info(`${request.method} ${path}`);
 
       if (path.endsWith('.playground') && this.#options.playground) {
-        return this.#response(200, mimeTypes.html, playgroundPage);
+        const content = await this.#getPlaygroundPage();
+        return this.#response(200, mimeTypes.html, content);
       }
 
       if (path.endsWith('.bundle.js') && this.#options.bundle) {
@@ -181,5 +183,24 @@ export class Server {
         },
       },
     );
+  }
+
+  /**
+   * Returns the playground page.
+   */
+  async #getPlaygroundPage(): Promise<string> {
+    if (!playgroundPage) {
+      const page = await Deno.readTextFile(new URL('./playground/page.html', import.meta.url));
+      const style = await Deno.readTextFile(new URL('./playground/style.css', import.meta.url));
+      const script = await Deno.readTextFile(new URL('./playground/script.js', import.meta.url));
+      const example = await Deno.readTextFile(new URL('./playground/example.js', import.meta.url));
+
+      playgroundPage = page
+        .replace('/* STYLE */', style)
+        .replace('/* SCRIPT */', script)
+        .replace('<!-- EXAMPLE -->', example);
+    }
+
+    return playgroundPage;
   }
 }
