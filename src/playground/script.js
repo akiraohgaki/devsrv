@@ -88,15 +88,46 @@ class PlaygroundLogs {
   }
 }
 
+const code = new PlaygroundCode();
+const preview = new PlaygroundPreview();
+const logs = new PlaygroundLogs();
+
+class PlaygroundTest {
+  constructor(name) {
+    logs.add(name);
+  }
+
+  async step(name, func) {
+    return await Promise.resolve().then(() => {
+      return func(this);
+    }).then((result) => {
+      if (name) {
+        logs.add(`${name} ... Passed`);
+      }
+      if (result !== undefined) {
+        logs.add(result);
+      }
+      return true;
+    }).catch((exception) => {
+      if (name) {
+        logs.add(`${name} ... Failed`);
+      }
+      logs.add(exception);
+      return false;
+    });
+  }
+}
+
+async function test(name, func) {
+  const playgroundTest = new PlaygroundTest(name);
+  return await playgroundTest.step('', func);
+}
+
 async function sleep(ms) {
   await new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
-
-const code = new PlaygroundCode();
-const preview = new PlaygroundPreview();
-const logs = new PlaygroundLogs();
 
 document.querySelector('[data-action="code.run"]').addEventListener('click', code.run.bind(code));
 document.querySelector('[data-action="code.clear"]').addEventListener('click', code.clear.bind(code));
@@ -108,5 +139,6 @@ globalThis.playground = {
   preview,
   logs,
   log: logs.add.bind(logs),
+  test,
   sleep,
 };
