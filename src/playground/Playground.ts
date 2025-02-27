@@ -9,23 +9,57 @@ const code = new PlaygroundCode();
 const preview = new PlaygroundPreview();
 const logs = new PlaygroundLogs();
 
+/**
+ * Playground class.
+ *
+ * @example Basic usage
+ * ```ts
+ * await Playground.test('Test', async (t) => {
+ *   await t.step('create button', () => {
+ *     Playground.preview.set('<button></button>');
+ *     const button = Playground.preview.get('button');
+ *     Playground.log(Playground.preview.get().innerHTML);
+ *   });
+ * });
+ * ```
+ */
 export class Playground {
+  /**
+   * Returns the PlaygroundCode instance.
+   */
   static get code(): PlaygroundCode {
     return code;
   }
 
+  /**
+   * Returns the PlaygroundPreview instance.
+   */
   static get preview(): PlaygroundPreview {
     return preview;
   }
 
+  /**
+   * Returns the PlaygroundLogs instance.
+   */
   static get logs(): PlaygroundLogs {
     return logs;
   }
 
+  /**
+   * Logs data to the playground logs.
+   *
+   * @param data - The data to log.
+   */
   static log(...data: Array<unknown>): void {
     logs.add(...data);
   }
 
+  /**
+   * Runs a test.
+   *
+   * @param name - The name of the test.
+   * @param func - The function to run.
+   */
   static async test(
     name: string,
     func: (context: PlaygroundTestContext) => unknown,
@@ -38,6 +72,11 @@ export class Playground {
     return await test.run();
   }
 
+  /**
+   * Pauses the execution for a specified amount of time.
+   *
+   * @param ms - The number of milliseconds to wait.
+   */
   static async sleep(ms: number): Promise<void> {
     await new Promise((resolve) => {
       setTimeout(resolve, ms);

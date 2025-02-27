@@ -2,6 +2,9 @@ import type { PlaygroundTestContext, PlaygroundTestOptions, PlaygroundTestState 
 
 import { PlaygroundLogs } from './PlaygroundLogs.ts';
 
+/**
+ * PlaygroundTest class for managing tests within the playground page.
+ */
 export class PlaygroundTest {
   #options: PlaygroundTestOptions;
 
@@ -9,6 +12,11 @@ export class PlaygroundTest {
 
   #stateCollection: Set<PlaygroundTestState>;
 
+  /**
+   * Creates a new instance of the PlaygroundTest class.
+   *
+   * @param options - The test options.
+   */
   constructor(options: PlaygroundTestOptions) {
     this.#options = {
       rootInstance: this,
@@ -27,10 +35,16 @@ export class PlaygroundTest {
     this.#stateCollection.add(this.#state);
   }
 
+  /**
+   * Returns the collection of test states.
+   */
   get stateCollection(): Set<PlaygroundTestState> {
     return this.#stateCollection;
   }
 
+  /**
+   * Runs the test.
+   */
   async run(): Promise<boolean> {
     const context: PlaygroundTestContext = {
       step: async (name, func) => {
