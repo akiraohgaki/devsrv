@@ -1,29 +1,19 @@
 // You can import modules.
 //import * as mod from 'http://localhost:3000/mod.bundle.js';
 
-// Helper functions available.
-const { code, preview, logs, log, sleep } = globalThis.playground;
-
 // For example
+await Playground.test('example', async (t) => {
+  await t.step('create button', () => {
+    Playground.preview.set('&lt;button&gt;Click me&lt;/button&gt;');
+  });
 
-preview.set('&lt;button&gt;Click me&lt;/button&gt;');
+  await t.step('add event listener to button', () => {
+    Playground.preview.get('button').addEventListener('click', () => {
+      Playground.log('Button clicked!');
+    });
+  });
 
-const button = preview.get().querySelector('button');
-
-button.addEventListener('click', () => {
-  log('Button clicked!'); // or logs.add('Button clicked!');
+  await t.step('the preview content should be logged', () => {
+    Playground.log(Playground.preview.get().innerHTML);
+  });
 });
-
-log(preview.get().innerHTML);
-
-await sleep(30000);
-
-const codeContent = code.get().textContent;
-
-code.clear();
-preview.clear();
-logs.clear();
-
-await sleep(1000);
-
-code.set(codeContent);

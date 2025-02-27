@@ -100,8 +100,24 @@ export class Server {
       console.info(`${request.method} ${path}`);
 
       if (path.endsWith('.playground') && this.#options.playground) {
-        const content = await this.#getPlaygroundPage();
-        return this.#response(200, mimeTypes.html, content);
+        if (!playgroundPage) {
+          const page = await Deno.readTextFile(new URL('./playground/page.html', import.meta.url));
+          const style = await Deno.readTextFile(new URL('./playground/style.css', import.meta.url));
+          const example = await Deno.readTextFile(new URL('./playground/example.js', import.meta.url));
+
+          const buildHelper = new BuildHelper();
+          const script = await buildHelper.bundle(
+            (new URL('./playground/script.ts', import.meta.url)).pathname,
+            { minify: true },
+          );
+
+          playgroundPage = page
+            .replace('/* STYLE */', style)
+            .replace('/* SCRIPT */', script)
+            .replace('/* EXAMPLE */', example);
+        }
+
+        return this.#response(200, mimeTypes.html, playgroundPage);
       }
 
       if (path.endsWith('.bundle.js') && this.#options.bundle) {
@@ -183,24 +199,5 @@ export class Server {
         },
       },
     );
-  }
-
-  /**
-   * Returns the playground page.
-   */
-  async #getPlaygroundPage(): Promise<string> {
-    if (!playgroundPage) {
-      const page = await Deno.readTextFile(new URL('./playground/page.html', import.meta.url));
-      const style = await Deno.readTextFile(new URL('./playground/style.css', import.meta.url));
-      const script = await Deno.readTextFile(new URL('./playground/script.js', import.meta.url));
-      const example = await Deno.readTextFile(new URL('./playground/example.js', import.meta.url));
-
-      playgroundPage = page
-        .replace('/* STYLE */', style)
-        .replace('/* SCRIPT */', script)
-        .replace('<!-- EXAMPLE -->', example);
-    }
-
-    return playgroundPage;
   }
 }
