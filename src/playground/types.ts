@@ -13,9 +13,9 @@ export interface PlaygroundTestOptions {
    */
   func: (context: PlaygroundTestContext) => unknown;
   /**
-   * The root instance of the PlaygroundTest, used for nested tests.
+   * The parent instance of the PlaygroundTest, used for nested tests.
    */
-  rootInstance: PlaygroundTest;
+  parent: PlaygroundTest;
 }
 
 /**
@@ -54,4 +54,8 @@ export interface PlaygroundTestState {
    * The exception thrown during the test, if any.
    */
   exception: unknown;
+  /**
+   * The states of the steps within the test.
+   */
+  children: Array<PlaygroundTestState>;
 }

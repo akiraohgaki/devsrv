@@ -64,10 +64,7 @@ export class Playground {
     name: string,
     func: (context: PlaygroundTestContext) => unknown,
   ): Promise<boolean> {
-    const test = new PlaygroundTest({
-      name: name,
-      func: func,
-    });
+    const test = new PlaygroundTest({ name, func });
 
     return await test.run();
   }

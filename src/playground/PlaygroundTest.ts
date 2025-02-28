@@ -2,13 +2,13 @@ import type { PlaygroundTestContext, PlaygroundTestOptions, PlaygroundTestState 
 
 import { PlaygroundLogs } from './PlaygroundLogs.ts';
 
+const logs = new PlaygroundLogs();
+
 /**
  * PlaygroundTest class for managing tests within the playground page.
  */
 export class PlaygroundTest {
   #options: PlaygroundTestOptions;
-
-  #stateCollection: Set<PlaygroundTestState>;
 
   #state: PlaygroundTestState;
 
@@ -21,27 +21,28 @@ export class PlaygroundTest {
     this.#options = {
       name: 'Untitled test',
       func: () => {},
-      rootInstance: this,
+      parent: this,
       ...options,
     };
-
-    this.#stateCollection = options.rootInstance?.stateCollection ?? new Set();
 
     this.#state = {
       name: this.#options.name,
       isPassed: false,
       result: undefined,
       exception: undefined,
+      children: [],
     };
 
-    this.#stateCollection.add(this.#state);
+    if (this.#options.parent !== this) {
+      this.#options.parent.state.children.push(this.#state);
+    }
   }
 
   /**
-   * Returns the collection of test states.
+   * Returns the test state.
    */
-  get stateCollection(): Set<PlaygroundTestState> {
-    return this.#stateCollection;
+  get state(): PlaygroundTestState {
+    return this.#state;
   }
 
   /**
@@ -50,11 +51,7 @@ export class PlaygroundTest {
   async run(): Promise<boolean> {
     const context: PlaygroundTestContext = {
       step: async (name, func) => {
-        const test = new PlaygroundTest({
-          name: name,
-          func: func,
-          rootInstance: this.#options.rootInstance,
-        });
+        const test = new PlaygroundTest({ name, func, parent: this });
 
         return await test.run();
       },
@@ -64,29 +61,51 @@ export class PlaygroundTest {
       // Invoke the sync/async func in Promise chain.
       return this.#options.func(context);
     }).then((result) => {
-      this.#state.isPassed = true;
+      this.#state.isPassed = this.#isChildrenPassed();
       this.#state.result = result;
     }).catch((exception) => {
       this.#state.isPassed = false;
       this.#state.exception = exception;
     });
 
-    if (this.#options.rootInstance === this) {
-      const logs = new PlaygroundLogs();
-
-      for (const state of this.#stateCollection) {
-        logs.add(state.name, '...', state.isPassed ? 'Passed' : 'Failed');
-
-        if (state.result !== undefined) {
-          logs.add(state.result);
-        }
-
-        if (state.exception !== undefined) {
-          logs.add(state.exception);
-        }
-      }
+    if (this.#options.parent === this) {
+      this.#outputState(this.#state);
     }
 
     return this.#state.isPassed;
+  }
+
+  /**
+   * Checks if all child tests have passed.
+   */
+  #isChildrenPassed(): boolean {
+    for (const childState of this.#state.children) {
+      if (!childState.isPassed) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Outputs the state of the test and its children to the logs.
+   *
+   * @param state - The state of the test.
+   * @param depth - The depth of the test in the hierarchy.
+   */
+  #outputState(state: PlaygroundTestState, depth: number = 1): void {
+    logs.add(''.padEnd(depth, '#'), state.name, '...', state.isPassed ? 'Passed' : 'Failed');
+
+    if (state.result !== undefined) {
+      logs.add(state.result);
+    }
+
+    if (state.exception !== undefined) {
+      logs.add(state.exception);
+    }
+
+    for (const childState of state.children) {
+      this.#outputState(childState, depth + 1);
+    }
   }
 }
