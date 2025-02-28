@@ -40,7 +40,7 @@ Deno.test('Server', async (t) => {
 Deno.test('Web server', async (t) => {
   let server: Server;
 
-  await t.step('Starts server', async () => {
+  await t.step('starts server', async () => {
     server = new Server({
       hostname,
       port,
@@ -57,7 +57,7 @@ Deno.test('Web server', async (t) => {
     assert((await fetch(origin, { method: 'HEAD' })).ok);
   });
 
-  await t.step('Playground page', async () => {
+  await t.step('playground page', async () => {
     const response = await fetch(`${origin}/test.playground`);
     const content = await response.text();
 
@@ -66,7 +66,7 @@ Deno.test('Web server', async (t) => {
     assert(content.search('<title>Playground</title>') !== -1);
   });
 
-  await t.step('Directory index page', async () => {
+  await t.step('directory index page', async () => {
     const responseA = await fetch(`${origin}/`);
     const contentA = await responseA.text();
 
@@ -105,7 +105,7 @@ Deno.test('Web server', async (t) => {
   });
 
   await t.step('404 Not Found', async (t) => {
-    await t.step('Directory index page', async () => {
+    await t.step('if directory index page not found', async () => {
       const anotherPort = port + 1;
       const origin = `http://${hostname}:${anotherPort}`;
 
@@ -132,7 +132,7 @@ Deno.test('Web server', async (t) => {
       assert(content.search('Not Found') !== -1);
     });
 
-    await t.step('TypeScript bundling', async () => {
+    await t.step('if file not found when TypeScript bundling', async () => {
       const response = await fetch(`${origin}/abcdef.bundle.js`);
       const content = await response.text();
 
@@ -151,7 +151,7 @@ Deno.test('Web server', async (t) => {
     assert(content.search('Internal Server Error') !== -1);
   });
 
-  await t.step('Stops server', async () => {
+  await t.step('stops server', async () => {
     server.stop();
 
     await sleep(100);
