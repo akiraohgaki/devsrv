@@ -11,6 +11,9 @@
   "publish": {
     "include": [
       "src/**/*.ts",
+      "src/**/*.js",
+      "src/**/*.css",
+      "src/**/*.html",
       "mod.ts",
       "playground.ts",
       "serve.ts",
