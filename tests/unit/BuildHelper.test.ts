@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertNotEquals } from '@std/assert';
+import { assert, assertEquals } from '@std/assert';
 
 import { BuildHelper } from '../../mod.ts';
 
