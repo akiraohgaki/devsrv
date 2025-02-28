@@ -58,13 +58,13 @@ export class Playground {
    * Runs a test.
    *
    * @param name - The name of the test.
-   * @param func - The function to run.
+   * @param fn - The function to run.
    */
   static async test(
     name: string,
-    func: (context: PlaygroundTestContext) => unknown,
+    fn: (context: PlaygroundTestContext) => unknown,
   ): Promise<boolean> {
-    const test = new PlaygroundTest({ name, func });
+    const test = new PlaygroundTest({ name, fn });
 
     return await test.run();
   }

@@ -11,7 +11,7 @@ export interface PlaygroundTestOptions {
   /**
    * The function to run for the test.
    */
-  func: (context: PlaygroundTestContext) => unknown;
+  fn: (context: PlaygroundTestContext) => unknown;
   /**
    * The parent instance of the PlaygroundTest, used for nested tests.
    */
@@ -26,11 +26,11 @@ export interface PlaygroundTestContext {
    * Defines a step within a test.
    *
    * @param name - The name of the step.
-   * @param func - The function to run for the step.
+   * @param fn - The function to run for the step.
    */
   step: (
     name: string,
-    func: (context: PlaygroundTestContext) => unknown,
+    fn: (context: PlaygroundTestContext) => unknown,
   ) => Promise<boolean>;
 }
 

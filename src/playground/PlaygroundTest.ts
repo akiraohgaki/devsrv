@@ -20,7 +20,7 @@ export class PlaygroundTest {
   constructor(options: Partial<PlaygroundTestOptions>) {
     this.#options = {
       name: 'Untitled test',
-      func: () => {},
+      fn: () => {},
       parent: this,
       ...options,
     };
@@ -50,16 +50,16 @@ export class PlaygroundTest {
    */
   async run(): Promise<boolean> {
     const context: PlaygroundTestContext = {
-      step: async (name, func) => {
-        const test = new PlaygroundTest({ name, func, parent: this });
+      step: async (name, fn) => {
+        const test = new PlaygroundTest({ name, fn, parent: this });
 
         return await test.run();
       },
     };
 
     await Promise.resolve().then(() => {
-      // Invoke the sync/async func in Promise chain.
-      return this.#options.func(context);
+      // Invoke the sync/async function in Promise chain.
+      return this.#options.fn(context);
     }).then((result) => {
       this.#state.passed = this.#areChildrenPassed();
       this.#state.result = result;
