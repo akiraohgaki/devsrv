@@ -45,7 +45,7 @@ export interface PlaygroundTestState {
   /**
    * Indicates whether the test passed.
    */
-  isPassed: boolean;
+  passed: boolean;
   /**
    * The result of the test, if any.
    */

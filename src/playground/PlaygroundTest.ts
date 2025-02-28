@@ -27,7 +27,7 @@ export class PlaygroundTest {
 
     this.#state = {
       name: this.#options.name,
-      isPassed: false,
+      passed: false,
       result: undefined,
       exception: undefined,
       children: [],
@@ -46,7 +46,7 @@ export class PlaygroundTest {
   }
 
   /**
-   * Runs the test.
+   * Runs the test and all its child tests.
    */
   async run(): Promise<boolean> {
     const context: PlaygroundTestContext = {
@@ -61,26 +61,26 @@ export class PlaygroundTest {
       // Invoke the sync/async func in Promise chain.
       return this.#options.func(context);
     }).then((result) => {
-      this.#state.isPassed = this.#isChildrenPassed();
+      this.#state.passed = this.#areChildrenPassed();
       this.#state.result = result;
     }).catch((exception) => {
-      this.#state.isPassed = false;
+      this.#state.passed = false;
       this.#state.exception = exception;
     });
 
     if (this.#options.parent === this) {
-      this.#outputState(this.#state);
+      this.#outputTestReport(this.#state);
     }
 
-    return this.#state.isPassed;
+    return this.#state.passed;
   }
 
   /**
    * Checks if all child tests have passed.
    */
-  #isChildrenPassed(): boolean {
+  #areChildrenPassed(): boolean {
     for (const childState of this.#state.children) {
-      if (!childState.isPassed) {
+      if (!childState.passed) {
         return false;
       }
     }
@@ -88,24 +88,29 @@ export class PlaygroundTest {
   }
 
   /**
-   * Outputs the state of the test and its children to the logs.
+   * Outputs a report of the test's state and the state of its children.
    *
    * @param state - The state of the test.
-   * @param depth - The depth of the test in the hierarchy.
+   * @param indentationLevel - The indentation level for visual hierarchy.
    */
-  #outputState(state: PlaygroundTestState, depth: number = 1): void {
-    logs.add(''.padEnd(depth, '#'), state.name, '...', state.isPassed ? 'Passed' : 'Failed');
+  #outputTestReport(state: PlaygroundTestState, indentationLevel: number = 0): void {
+    logs.add(
+      '#'.repeat(indentationLevel),
+      state.name,
+      '...',
+      state.passed ? 'Passed' : 'Failed',
+    );
 
     if (state.result !== undefined) {
-      logs.add(state.result);
+      logs.add('Result:', state.result);
     }
 
     if (state.exception !== undefined) {
-      logs.add(state.exception);
+      logs.add('Exception:', state.exception);
     }
 
     for (const childState of state.children) {
-      this.#outputState(childState, depth + 1);
+      this.#outputTestReport(childState, indentationLevel + 1);
     }
   }
 }
