@@ -3,6 +3,7 @@
   "version": "0.8.3",
   "exports": {
     ".": "./mod.ts",
+    "./playground": "./playground.ts",
     "./serve": "./serve.ts",
     "./bundle": "./bundle.ts",
     "./export": "./export.ts"
@@ -10,7 +11,11 @@
   "publish": {
     "include": [
       "src/**/*.ts",
+      "src/**/*.js",
+      "src/**/*.css",
+      "src/**/*.html",
       "mod.ts",
+      "playground.ts",
       "serve.ts",
       "bundle.ts",
       "export.ts",
@@ -75,7 +80,7 @@
   "tasks": {
     "check": "deno task check:pre && deno task check:check && deno task check:post",
     "check:pre": "deno outdated && deno fmt && deno lint",
-    "check:check": "deno check mod.ts serve.ts bundle.ts export.ts",
+    "check:check": "deno check mod.ts playground.ts serve.ts bundle.ts export.ts",
     "check:post": "echo 'Skip task check:post'",
     "build": "deno task build:pre && deno task build:build && deno task build:post",
     "build:pre": "deno run -A export.ts --includes='tests/demo/index.html' tmp/demo",
