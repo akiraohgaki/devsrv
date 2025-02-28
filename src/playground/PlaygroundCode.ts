@@ -8,7 +8,7 @@ export class PlaygroundCode {
    * Creates a new instance of the PlaygroundCode class.
    */
   constructor() {
-    this.#container = document.querySelector('[data-content="code"]') as Element;
+    this.#container = document.querySelector('[data-content="code"] code') as Element;
   }
 
   /**
