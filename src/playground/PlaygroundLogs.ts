@@ -31,7 +31,9 @@ export class PlaygroundLogs {
     console.log(...data);
 
     const content = data.map((item) => {
-      if (Array.isArray(item) || (typeof item === 'object' && item !== null)) {
+      if (item instanceof Error) {
+        return item.message;
+      } else if (Array.isArray(item) || (typeof item === 'object' && item !== null)) {
         return JSON.stringify(item);
       } else {
         return '' + item;
