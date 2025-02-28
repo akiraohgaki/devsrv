@@ -15,7 +15,7 @@ export interface PlaygroundTestOptions {
   /**
    * The root instance of the PlaygroundTest, used for nested tests.
    */
-  rootInstance?: PlaygroundTest;
+  rootInstance: PlaygroundTest;
 }
 
 /**

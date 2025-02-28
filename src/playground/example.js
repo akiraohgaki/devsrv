@@ -1,7 +1,7 @@
 // You can import modules.
 //import * as mod from 'http://localhost:3000/mod.bundle.js';
 
-// For example
+// globalThis.Playground available, for example:
 await Playground.test('example', async (t) => {
   await t.step('create button', () => {
     Playground.preview.set('&lt;button&gt;Click me&lt;/button&gt;');

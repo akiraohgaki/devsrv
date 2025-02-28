@@ -5,5 +5,5 @@ document.querySelector('[data-action="code.clear"]')?.addEventListener('click', 
 document.querySelector('[data-action="preview.clear"]')?.addEventListener('click', () => Playground.preview.clear());
 document.querySelector('[data-action="logs.clear"]')?.addEventListener('click', () => Playground.logs.clear());
 
-// @ts-ignore because globalThis.playground has no type definition
+// @ts-ignore because globalThis.Playground has no type definition
 globalThis.Playground = Playground;

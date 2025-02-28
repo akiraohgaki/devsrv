@@ -10,14 +10,14 @@ const preview = new PlaygroundPreview();
 const logs = new PlaygroundLogs();
 
 /**
- * Playground class.
+ * Playground class for managing the playground page.
  *
  * @example Basic usage
  * ```ts
  * await Playground.test('Test', async (t) => {
  *   await t.step('create button', () => {
- *     Playground.preview.set('<button></button>');
- *     const button = Playground.preview.get('button');
+ *     Playground.preview.set('<button>button</button>');
+ *     Playground.log(Playground.preview.get('button').textContent);
  *     Playground.log(Playground.preview.get().innerHTML);
  *   });
  * });

@@ -2,20 +2,20 @@
  * PlaygroundCode class for managing code within the playground page.
  */
 export class PlaygroundCode {
-  #containerElement: Element;
+  #container: Element;
 
   /**
    * Creates a new instance of the PlaygroundCode class.
    */
   constructor() {
-    this.#containerElement = document.querySelector('[data-content="code"]') as Element;
+    this.#container = document.querySelector('[data-content="code"]') as Element;
   }
 
   /**
    * Returns the current code content from the playground page.
    */
   get(): string {
-    return this.#containerElement.textContent ?? '';
+    return this.#container.textContent ?? '';
   }
 
   /**
@@ -24,21 +24,21 @@ export class PlaygroundCode {
    * @param code - The code string to set.
    */
   set(code: string): void {
-    this.#containerElement.textContent = code;
+    this.#container.textContent = code;
   }
 
   /**
    * Clears the code content within the playground page.
    */
   clear(): void {
-    this.#containerElement.textContent = '';
+    this.#container.textContent = '';
   }
 
   /**
    * Runs the code currently present in the playground page.
    */
   async run(): Promise<void> {
-    const code = this.#containerElement.textContent ?? '';
+    const code = this.#container.textContent ?? '';
 
     const url = URL.createObjectURL(new Blob([code], { type: 'text/javascript' }));
 

@@ -8,20 +8,24 @@ import { PlaygroundLogs } from './PlaygroundLogs.ts';
 export class PlaygroundTest {
   #options: PlaygroundTestOptions;
 
-  #state: PlaygroundTestState;
-
   #stateCollection: Set<PlaygroundTestState>;
+
+  #state: PlaygroundTestState;
 
   /**
    * Creates a new instance of the PlaygroundTest class.
    *
    * @param options - The test options.
    */
-  constructor(options: PlaygroundTestOptions) {
+  constructor(options: Partial<PlaygroundTestOptions>) {
     this.#options = {
+      name: 'Untitled test',
+      func: () => {},
       rootInstance: this,
       ...options,
     };
+
+    this.#stateCollection = options.rootInstance?.stateCollection ?? new Set();
 
     this.#state = {
       name: this.#options.name,
@@ -29,8 +33,6 @@ export class PlaygroundTest {
       result: undefined,
       exception: undefined,
     };
-
-    this.#stateCollection = this.#options.rootInstance?.stateCollection ?? new Set();
 
     this.#stateCollection.add(this.#state);
   }

@@ -2,20 +2,20 @@
  * PlaygroundLogs class for managing logs within the playground page.
  */
 export class PlaygroundLogs {
-  #containerElement: Element;
+  #container: Element;
 
   /**
    * Creates a new instance of the PlaygroundLogs class.
    */
   constructor() {
-    this.#containerElement = document.querySelector('[data-content="logs"]') as Element;
+    this.#container = document.querySelector('[data-content="logs"]') as Element;
   }
 
   /**
    * Returns the current logs from the playground page.
    */
   get(): Array<string> {
-    const logs = this.#containerElement.querySelectorAll('[data-content="log"]');
+    const logs = this.#container.querySelectorAll('[data-content="log"]');
 
     return Array.from(logs).map((item) => {
       return item.textContent ?? '';
@@ -42,13 +42,13 @@ export class PlaygroundLogs {
     log.setAttribute('data-content', 'log');
     log.textContent = content;
 
-    this.#containerElement.appendChild(log);
+    this.#container.appendChild(log);
   }
 
   /**
    * Clears the logs within the playground page.
    */
   clear(): void {
-    this.#containerElement.textContent = '';
+    this.#container.textContent = '';
   }
 }

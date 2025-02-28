@@ -2,13 +2,13 @@
  * PlaygroundPreview class for managing preview content within the playground page.
  */
 export class PlaygroundPreview {
-  #containerElement: Element;
+  #container: Element;
 
   /**
    * Creates a new instance of the PlaygroundPreview class.
    */
   constructor() {
-    this.#containerElement = document.querySelector('[data-content="preview"]') as Element;
+    this.#container = document.querySelector('[data-content="preview"]') as Element;
   }
 
   /**
@@ -18,7 +18,7 @@ export class PlaygroundPreview {
    * @returns The Element matching the selectors, or the entire preview container if no selectors are provided.
    */
   get(selectors?: string): Element | null {
-    return selectors ? this.#containerElement.querySelector(selectors) : this.#containerElement;
+    return selectors ? this.#container.querySelector(selectors) : this.#container;
   }
 
   /**
@@ -41,14 +41,14 @@ export class PlaygroundPreview {
       template.textContent = '' + content;
     }
 
-    this.#containerElement.textContent = '';
-    this.#containerElement.appendChild(template.content);
+    this.#container.textContent = '';
+    this.#container.appendChild(template.content);
   }
 
   /**
    * Clears the preview content within the playground page.
    */
   clear(): void {
-    this.#containerElement.textContent = '';
+    this.#container.textContent = '';
   }
 }
