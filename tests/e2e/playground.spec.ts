@@ -9,12 +9,10 @@ test.describe('Playground page', () => {
     const code = `
       import { template } from '${baseURL}/template.bundle.js';
 
-      playground.preview.set(template.content);
+      Playground.preview.set(template.content);
 
-      playground.logs.add(playground.preview.get().innerHTML);
+      Playground.log(Playground.preview.get().innerHTML);
     `;
-
-    console.log(code);
 
     await page.locator('[data-content="code"] code').fill(code);
     await page.locator('[data-action="code.run"]').click();
@@ -32,27 +30,27 @@ test.describe('Playground page', () => {
     await expect(page.locator('[data-content="log"]')).not.toHaveText([/.+bundled into.+/]);
   });
 
-  test('playground.code', async ({ page }) => {
+  test('Playground.code', async ({ page }) => {
     const code = `
       const isEnabled = true;
-      playground.logs.add(isEnabled);
+
+      Playground.log(isEnabled);
 
       if (isEnabled) {
-        const newCode = playground.code.get().textContent.replace(
+        const newCode = Playground.code.get().replace(
           'const isEnabled = true;',
           'const isEnabled = false;'
         );
 
-        playground.code.clear();
-        playground.logs.add(playground.code.get().textContent);
+        Playground.code.clear();
 
-        playground.code.set(newCode);
+        Playground.log(Playground.code.get());
 
-        playground.code.run();
+        Playground.code.set(newCode);
+
+        Playground.code.run();
       }
     `;
-
-    console.log(code);
 
     await page.locator('[data-content="code"] code').fill(code);
     await page.locator('[data-action="code.run"]').click();
@@ -64,65 +62,64 @@ test.describe('Playground page', () => {
     ]);
   });
 
-  test('playground.preview', async ({ page }) => {
+  test('Playground.preview', async ({ page }) => {
     const code = `
-      playground.preview.set('text');
-      playground.logs.add(playground.preview.get().innerHTML);
+      Playground.preview.set('<span>abc</span>');
+
+      Playground.log(Playground.preview.get('span').outerHTML);
 
       const divElement = document.createElement('div');
-      divElement.textContent = 'text';
-      playground.preview.set(divElement);
-      playground.logs.add(playground.preview.get().innerHTML);
+      divElement.textContent = 'abc';
+      Playground.preview.set(divElement);
+
+      Playground.log(Playground.preview.get('div').outerHTML);
 
       const liElement = document.createElement('li');
-      liElement.textContent = 'text';
+      liElement.textContent = 'abc';
       const ulElement = document.createElement('ul');
       ulElement.appendChild(liElement);
-      playground.preview.set(ulElement.childNodes);
-      playground.logs.add(playground.preview.get().innerHTML);
+      Playground.preview.set(ulElement.childNodes);
 
-      playground.preview.clear();
-      playground.logs.add(playground.preview.get().innerHTML);
+      Playground.log(Playground.preview.get().innerHTML);
+
+      Playground.preview.clear();
+
+      Playground.log(Playground.preview.get().innerHTML);
     `;
-
-    console.log(code);
 
     await page.locator('[data-content="code"] code').fill(code);
     await page.locator('[data-action="code.run"]').click();
 
     await expect(page.locator('[data-content="log"]')).toHaveText([
-      'text',
-      '<div>text</div>',
-      '<li>text</li>',
+      '<span>abc</span>',
+      '<div>abc</div>',
+      '<li>abc</li>',
       '',
     ]);
   });
 
-  test('playground.logs', async ({ page }) => {
+  test('Playground.logs', async ({ page }) => {
     const code = `
-      playground.logs.add('abc');
+      Playground.logs.add('abc');
 
-      const text = playground.logs.get().querySelector('[data-content="log"]').textContent;
+      const logs = Playground.logs.get();
 
-      playground.logs.clear();
+      Playground.logs.clear();
 
-      playground.logs.add(text);
-      playground.logs.add(['abc',123]);
-      playground.logs.add({abc:123});
-
-      playground.logs.add(true);
-      playground.logs.add(123);
-      playground.logs.add(null);
-      playground.logs.add(undefined);
+      Playground.logs.add(logs);
+      Playground.logs.add(['abc',123]);
+      Playground.logs.add({abc:123});
+      Playground.logs.add(true);
+      Playground.logs.add(123);
+      Playground.logs.add(null);
+      Playground.logs.add(undefined);
     `;
-
-    console.log(code);
 
     await page.locator('[data-content="code"] code').fill(code);
     await page.locator('[data-action="code.run"]').click();
 
     await expect(page.locator('[data-content="log"]')).toHaveText([
-      'abc',
+      '["abc"]',
       '["abc",123]',
       '{"abc":123}',
       'true',
@@ -132,20 +129,71 @@ test.describe('Playground page', () => {
     ]);
   });
 
-  test('playground.sleep', async ({ page }) => {
+  test('Playground.log()', async ({ page }) => {
     const code = `
-      playground.logs.add(0);
-
-      setTimeout(() => {
-        playground.logs.add(1);
-      }, 50);
-
-      await playground.sleep(100);
-
-      playground.logs.add(2);
+      Playground.log('abc');
     `;
 
-    console.log(code);
+    await page.locator('[data-content="code"] code').fill(code);
+    await page.locator('[data-action="code.run"]').click();
+
+    await expect(page.locator('[data-content="log"]')).toHaveText([
+      'abc',
+    ]);
+  });
+
+  test('Playground.test()', async ({ page }) => {
+    const code = `
+      await Playground.test('test1', async (t) => {
+        await t.step('step1', async (t) => {
+          await t.step('step1A', () => {
+            return true;
+          });
+        });
+      });
+
+      await Playground.test('test2', async (t) => {
+        await t.step('step1', () => {});
+        await t.step('step2', async (t) => {
+          await t.step('step2A', () => {});
+          await t.step('step2B', () => {
+            throw new Error('error');
+          });
+          await t.step('step2C', () => {});
+        });
+        await t.step('step3', () => {});
+      });
+    `;
+
+    await page.locator('[data-content="code"] code').fill(code);
+    await page.locator('[data-action="code.run"]').click();
+
+    await expect(page.locator('[data-content="log"]')).toHaveText([
+      '# test1 ... Passed',
+      '## step1 ... Passed',
+      '### step1A ... Passed',
+      'true',
+      '# test2 ... Failed',
+      '## step1 ... Passed',
+      '## step2 ... Failed',
+      '### step2A ... Passed',
+      '### step2B ... Failed',
+      'error',
+      '### step2C ... Passed',
+      '## step3 ... Passed',
+    ]);
+  });
+
+  test('Playground.sleep()', async ({ page }) => {
+    const code = `
+      Playground.log(0);
+
+      setTimeout(() => Playground.log(1), 50);
+
+      await Playground.sleep(100);
+
+      Playground.log(2);
+    `;
 
     await page.locator('[data-content="code"] code').fill(code);
     await page.locator('[data-action="code.run"]').click();
