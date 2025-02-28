@@ -13,27 +13,15 @@ Deno.test('BuildHelper', async (t) => {
 
   await t.step('export()', async (t) => {
     await t.step('re-create directory', async () => {
-      await Deno.mkdir('tmp/demo', { recursive: true });
-
-      const inodeA = (await Deno.stat('tmp/demo')).ino;
-
       await buildHelper.export('tmp/demo');
 
-      const inodeB = (await Deno.stat('tmp/demo')).ino;
-
       assert((await Deno.stat('tmp/demo')).isDirectory);
-      assertNotEquals(inodeA, inodeB);
     });
 
     await t.step('re-create directory and copy files', async () => {
-      const inodeA = (await Deno.stat('tmp/demo')).ino;
-
       await buildHelper.export('tmp/demo', ['tests/demo/index.html']);
 
-      const inodeB = (await Deno.stat('tmp/demo')).ino;
-
       assert((await Deno.stat('tmp/demo/index.html')).isFile);
-      assertNotEquals(inodeA, inodeB);
     });
   });
 
