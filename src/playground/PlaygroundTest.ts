@@ -93,7 +93,7 @@ export class PlaygroundTest {
    * @param state - The state of the test.
    * @param indentationLevel - The indentation level for visual hierarchy.
    */
-  #outputTestReport(state: PlaygroundTestState, indentationLevel: number = 0): void {
+  #outputTestReport(state: PlaygroundTestState, indentationLevel: number = 1): void {
     logs.add(
       '#'.repeat(indentationLevel),
       state.name,
