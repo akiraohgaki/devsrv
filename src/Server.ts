@@ -3,6 +3,8 @@ import type { ServerOptions } from './types.ts';
 import { BuildHelper } from './BuildHelper.ts';
 import { mimeTypes } from './mimeTypes.ts';
 
+const buildHelper = new BuildHelper();
+
 let playgroundPage: string | null = null;
 
 /**
@@ -27,9 +29,9 @@ let playgroundPage: string | null = null;
 export class Server {
   #options: ServerOptions;
 
-  #server: Deno.HttpServer | null = null;
+  #server: Deno.HttpServer | null;
 
-  #abortController: AbortController | null = null;
+  #abortController: AbortController | null;
 
   /**
    * Creates a new instance of the Server class.
@@ -46,6 +48,10 @@ export class Server {
       documentRoot: '.',
       ...options,
     };
+
+    this.#server = null;
+
+    this.#abortController = null;
   }
 
   /**
@@ -105,9 +111,8 @@ export class Server {
           const style = await Deno.readTextFile(new URL('./playground/style.css', import.meta.url));
           const example = await Deno.readTextFile(new URL('./playground/example.js', import.meta.url));
 
-          const buildHelper = new BuildHelper();
           const script = await buildHelper.bundle(
-            (new URL('./playground/script.ts', import.meta.url)).pathname,
+            new URL('./playground/script.ts', import.meta.url).pathname,
             { minify: true },
           );
 
@@ -124,7 +129,6 @@ export class Server {
         const resolvedPath = this.#options.documentRoot + path.replace(/^(.+)\.bundle\.js$/, '$1.ts');
 
         if (await this.#fileExists(resolvedPath)) {
-          const buildHelper = new BuildHelper();
           const content = await buildHelper.bundle(resolvedPath);
 
           return this.#response(200, mimeTypes.js, content);
