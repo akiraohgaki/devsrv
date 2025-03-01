@@ -37,7 +37,7 @@ Deno.test('Server', async (t) => {
   });
 });
 
-Deno.test('Web server', async (t) => {
+Deno.test('Development web server', async (t) => {
   let server: Server;
 
   await t.step('starts server', async () => {
@@ -64,6 +64,15 @@ Deno.test('Web server', async (t) => {
     assertEquals(response.status, 200);
     assertEquals(response.headers.get('content-type'), 'text/html');
     assert(content.search('<title>Playground</title>') !== -1);
+  });
+
+  await t.step('.bundle.js', async () => {
+    const response = await fetch(`${origin}/main.bundle.js`);
+    const content = await response.text();
+
+    assertEquals(response.status, 200);
+    assertEquals(response.headers.get('content-type'), 'text/javascript');
+    assert(content.search('bundled into') !== -1);
   });
 
   await t.step('directory index page', async () => {
@@ -93,15 +102,6 @@ Deno.test('Web server', async (t) => {
     assertEquals(responseD.status, 200);
     assertEquals(responseD.headers.get('content-type'), 'text/html');
     assertEquals(contentA, contentD);
-  });
-
-  await t.step('TypeScript bundling', async () => {
-    const response = await fetch(`${origin}/main.bundle.js`);
-    const content = await response.text();
-
-    assertEquals(response.status, 200);
-    assertEquals(response.headers.get('content-type'), 'text/javascript');
-    assert(content.search('bundled into') !== -1);
   });
 
   await t.step('404 Not Found', async (t) => {

@@ -70,6 +70,7 @@ test.describe('Playground page', () => {
 
       const divElement = document.createElement('div');
       divElement.textContent = 'abc';
+
       Playground.preview.set(divElement);
 
       Playground.log(Playground.preview.get('div').outerHTML);
@@ -78,6 +79,7 @@ test.describe('Playground page', () => {
       liElement.textContent = 'abc';
       const ulElement = document.createElement('ul');
       ulElement.appendChild(liElement);
+
       Playground.preview.set(ulElement.childNodes);
 
       Playground.log(Playground.preview.get().innerHTML);
