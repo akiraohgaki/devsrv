@@ -64,19 +64,19 @@ Deno.test('BuildHelper', async (t) => {
     });
 
     await t.step('minify option', async () => {
-      const codeMin = await buildHelper.bundle('tests/demo/main.ts', {
+      const code = await buildHelper.bundle('tests/demo/main.ts', {
         minify: true,
       });
 
-      assertEquals(await Deno.readTextFile('tmp/demo/main.bundle.min.js'), codeMin);
+      assertEquals(await Deno.readTextFile('tmp/demo/main.bundle.min.js'), code);
     });
 
     await t.step('externals option', async () => {
-      const codeExternalsExcluded = await buildHelper.bundle('tests/demo/external.ts', {
+      const code = await buildHelper.bundle('tests/demo/external.ts', {
         externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'],
       });
 
-      assertEquals(await Deno.readTextFile('tmp/demo/external.bundle.js'), codeExternalsExcluded);
+      assertEquals(await Deno.readTextFile('tmp/demo/external.bundle.js'), code);
     });
   });
 });
