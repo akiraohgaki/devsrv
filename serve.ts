@@ -14,6 +14,7 @@ try {
     hostname: cliUtil.toString(cliUtil.args.h ?? cliUtil.args.host, '0.0.0.0'),
     port: cliUtil.toNumber(cliUtil.args.p ?? cliUtil.args.port, 3000),
     directoryIndex: cliUtil.toString(cliUtil.args['directory-index'], 'index.html'),
+    liveReload: cliUtil.toBoolean(cliUtil.args['live-reload'], true),
     bundle: cliUtil.toBoolean(cliUtil.args.bundle, true),
     playground: cliUtil.toBoolean(cliUtil.args.playground, true),
     documentRoot: cliUtil.toString(cliUtil.args._[0], '.'),

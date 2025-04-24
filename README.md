@@ -18,13 +18,14 @@ deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
 | ----------------- | ----------------------- | ------------------------- |
 | `[DOCUMENT_ROOT]` | Document root directory | Current working directory |
 
-| Options                        | Description          | Default    |
-| ------------------------------ | -------------------- | ---------- |
-| `-h, --host <HOSTNAME>`        | Host name            | 0.0.0.0    |
-| `-p, --port <PORT>`            | Port number          | 3000       |
-| `--directory-index <FILENAME>` | Directory index file | index.html |
-| `--bundle <true/false>`        | TypeScript bundling  | true       |
-| `--playground <true/false>`    | Playground page      | true       |
+| Options                        | Description             | Default    |
+| ------------------------------ | ----------------------- | ---------- |
+| `-h, --host <HOSTNAME>`        | Host name               | 0.0.0.0    |
+| `-p, --port <PORT>`            | Port number             | 3000       |
+| `--directory-index <FILENAME>` | Directory index file    | index.html |
+| `--live-reload <true/false>`   | Live reload the browser | true       |
+| `--bundle <true/false>`        | TypeScript bundling     | true       |
+| `--playground <true/false>`    | Playground page         | true       |
 
 ### Build helper program: bundle
 
@@ -70,7 +71,7 @@ Serve static files from ./public directory with options specified.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/serve \
-  -h localhost -p 3000 --directory-index=index.html --bundle=true --playground=true \
+  -h localhost -p 3000 --directory-index=index.html --live-reload=true --bundle=true --playground=true \
   ./public
 ```
 
@@ -98,6 +99,10 @@ deno run -A jsr:@akiraohgaki/devsrv/export \
 ## Features
 
 ### Server
+
+#### Live reload
+
+Live reload the browser when files in the document root directory are changed.
 
 #### Request handling
 
