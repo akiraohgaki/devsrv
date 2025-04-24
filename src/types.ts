@@ -15,6 +15,10 @@ export interface ServerOptions {
    */
   directoryIndex: string;
   /**
+   * Live reload the browser.
+   */
+  liveReload: boolean;
+  /**
    * TypeScript bundling.
    */
   bundle: boolean;

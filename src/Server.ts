@@ -4,6 +4,8 @@ import { BuildHelper } from './BuildHelper.ts';
 import { mimeTypes } from './mimeTypes.ts';
 import playgroundPage from './playground/page.ts';
 
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
 const buildHelper = new BuildHelper();
 
 /**
@@ -15,6 +17,7 @@ const buildHelper = new BuildHelper();
  *   hostname: 'localhost',
  *   port: 3000,
  *   directoryIndex: 'index.html',
+ *   liveReload: true,
  *   bundle: true,
  *   playground: true,
  *   documentRoot: './public',
@@ -32,6 +35,13 @@ export class Server {
 
   #abortController: AbortController | null;
 
+  #fsWatcher: Deno.FsWatcher | null;
+
+  #state: {
+    message: string | null;
+    fsChanged: number | null;
+  };
+
   /**
    * Creates a new instance of the Server class.
    *
@@ -42,6 +52,7 @@ export class Server {
       hostname: '0.0.0.0',
       port: 3000,
       directoryIndex: 'index.html',
+      liveReload: true,
       bundle: true,
       playground: true,
       documentRoot: '.',
@@ -51,6 +62,13 @@ export class Server {
     this.#server = null;
 
     this.#abortController = null;
+
+    this.#fsWatcher = null;
+
+    this.#state = {
+      message: this.#options.liveReload ? 'Live reload enabled' : null,
+      fsChanged: null,
+    };
   }
 
   /**
@@ -77,7 +95,10 @@ export class Server {
     this.#server.finished.then(() => {
       this.#server = null;
       this.#abortController = null;
+      this.#stopWatchFs();
     });
+
+    this.#startWatchFs();
   }
 
   /**
@@ -94,6 +115,37 @@ export class Server {
   }
 
   /**
+   * Starts watch files are changed.
+   */
+  #startWatchFs(): void {
+    if (this.#fsWatcher) {
+      return;
+    }
+
+    Promise.resolve().then(async () => {
+      this.#fsWatcher = Deno.watchFs(this.#options.documentRoot);
+
+      for await (const event of this.#fsWatcher) {
+        if (['create', 'modify', 'rename', 'remove'].includes(event.kind)) {
+          this.#state.fsChanged = Date.now();
+        }
+      }
+    });
+  }
+
+  /**
+   * Stops watch files are changed.
+   */
+  #stopWatchFs(): void {
+    if (!this.#fsWatcher) {
+      return;
+    }
+
+    this.#fsWatcher.close();
+    this.#fsWatcher = null;
+  }
+
+  /**
    * Handles HTTP requests.
    *
    * @param request - Request object
@@ -103,6 +155,10 @@ export class Server {
       const path = new URL(request.url).pathname;
 
       console.info(`${request.method} ${path}`);
+
+      if (path.endsWith('/.events')) {
+        return this.#response(200, 'text/event-stream; charset=utf-8', this.#eventStream());
+      }
 
       if (path.endsWith('.playground') && this.#options.playground) {
         return this.#response(200, mimeTypes.html, playgroundPage);
@@ -138,7 +194,11 @@ export class Server {
       if (await this.#fileExists(resolvedPath)) {
         const ext = resolvedPath.split('.').pop() ?? '';
         const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
-        const content = await Deno.readFile(resolvedPath);
+        let content = await Deno.readFile(resolvedPath);
+
+        if (mimeType === mimeTypes.html) {
+          content = this.#insertScript(content);
+        }
 
         return this.#response(200, mimeType, content);
       } else {
@@ -158,22 +218,76 @@ export class Server {
    */
   async #fileExists(path: string): Promise<boolean> {
     let result = false;
+
     try {
       result = (await Deno.stat(path)).isFile;
     } catch {
       void 0;
     }
+
     return result;
   }
 
   /**
-   * Creates a response object.
+   * Inserts an additional script into HTML page.
+   *
+   * @param html - HTML page content
+   */
+  #insertScript(html: Uint8Array<ArrayBuffer>): Uint8Array<ArrayBuffer> {
+    const script = `
+      <script>
+        // This script has automatically inserted by server.
+        const eventSource = new EventSource('/.events');
+        eventSource.addEventListener('message', (event) => console.info(event.data));
+        ${this.#options.liveReload ? "eventSource.addEventListener('fsChanged', () => location.reload());" : ''}
+      </script>
+    `;
+
+    return textEncoder.encode(
+      textDecoder.decode(html).replace(/(<\/body>)/i, script + '$1'),
+    ) as Uint8Array<ArrayBuffer>;
+  }
+
+  /**
+   * Creates ReadableStream object that event stream for Server-Sent Events.
+   */
+  #eventStream(): ReadableStream<unknown> {
+    const getState = () => this.#state;
+
+    let intervalId: number | undefined = undefined;
+
+    return new ReadableStream({
+      start(controller) {
+        const state = getState();
+        intervalId = setInterval(() => {
+          if (state.message) {
+            controller.enqueue(textEncoder.encode(`event: message\ndata: ${state.message}\n\n`));
+            state.message = null;
+          }
+          if (state.fsChanged) {
+            controller.enqueue(textEncoder.encode(`event: fsChanged\ndata: ${state.fsChanged}\n\n`));
+            state.fsChanged = null;
+          }
+        }, 1000);
+      },
+      cancel() {
+        clearInterval(intervalId);
+      },
+    });
+  }
+
+  /**
+   * Creates Response object.
    *
    * @param status - HTTP status code
    * @param contentType - Content type
    * @param body - Content body
    */
   #response(status: number, contentType: string, body: BodyInit): Response {
+    const headerForEventStream: HeadersInit = contentType.startsWith('text/event-stream')
+      ? { 'Connection': 'keep-alive' }
+      : {};
+
     return new Response(
       body,
       {
@@ -183,6 +297,7 @@ export class Server {
           'Cross-Origin-Resource-Policy': 'cross-origin',
           'Cache-Control': 'no-store',
           'Pragma': 'no-cache',
+          ...headerForEventStream,
         },
       },
     );
