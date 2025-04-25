@@ -129,7 +129,7 @@ export class Server {
 
       console.info(`${request.method} ${path}`);
 
-      if (path.endsWith('/.events')) {
+      if (path.endsWith('.events')) {
         return this.#response(200, 'text/event-stream', this.#eventStream());
       }
 
