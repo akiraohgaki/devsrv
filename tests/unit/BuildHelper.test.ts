@@ -5,6 +5,10 @@ import { BuildHelper } from '../../mod.ts';
 Deno.test('BuildHelper', async (t) => {
   let buildHelper: BuildHelper;
 
+  const tempDir = await Deno.makeTempDir();
+
+  console.log(tempDir);
+
   await t.step('constructor()', () => {
     buildHelper = new BuildHelper();
 
@@ -13,15 +17,15 @@ Deno.test('BuildHelper', async (t) => {
 
   await t.step('export()', async (t) => {
     await t.step('re-create directory', async () => {
-      await buildHelper.export('tmp/demo');
+      await buildHelper.export(`${tempDir}/demo`);
 
-      assert((await Deno.stat('tmp/demo')).isDirectory);
+      assert((await Deno.stat(`${tempDir}/demo`)).isDirectory);
     });
 
     await t.step('re-create directory and copy files', async () => {
-      await buildHelper.export('tmp/demo', ['tests/demo/index.html']);
+      await buildHelper.export(`${tempDir}/demo`, ['tests/demo/index.html']);
 
-      assert((await Deno.stat('tmp/demo/index.html')).isFile);
+      assert((await Deno.stat(`${tempDir}/demo/index.html`)).isFile);
     });
   });
 
@@ -29,30 +33,30 @@ Deno.test('BuildHelper', async (t) => {
     await t.step('without options', async () => {
       await buildHelper.bundleFile(
         'tests/demo/main.ts',
-        'tmp/demo/main.bundle.js',
+        `${tempDir}/demo/main.bundle.js`,
       );
 
-      assert((await Deno.stat('tmp/demo/main.bundle.js')).isFile);
+      assert((await Deno.stat(`${tempDir}/demo/main.bundle.js`)).isFile);
     });
 
     await t.step('minify option', async () => {
       await buildHelper.bundleFile(
         'tests/demo/main.ts',
-        'tmp/demo/main.bundle.min.js',
+        `${tempDir}/demo/main.bundle.min.js`,
         { minify: true },
       );
 
-      assert((await Deno.stat('tmp/demo/main.bundle.min.js')).isFile);
+      assert((await Deno.stat(`${tempDir}/demo/main.bundle.min.js`)).isFile);
     });
 
     await t.step('externals option', async () => {
       await buildHelper.bundleFile(
         'tests/demo/external.ts',
-        'tmp/demo/external.bundle.js',
+        `${tempDir}/demo/external.bundle.js`,
         { externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'] },
       );
 
-      assert((await Deno.stat('tmp/demo/external.bundle.js')).isFile);
+      assert((await Deno.stat(`${tempDir}/demo/external.bundle.js`)).isFile);
     });
   });
 
@@ -60,7 +64,7 @@ Deno.test('BuildHelper', async (t) => {
     await t.step('without options', async () => {
       const code = await buildHelper.bundle('tests/demo/main.ts');
 
-      assertEquals(await Deno.readTextFile('tmp/demo/main.bundle.js'), code);
+      assertEquals(await Deno.readTextFile(`${tempDir}/demo/main.bundle.js`), code);
     });
 
     await t.step('minify option', async () => {
@@ -68,7 +72,7 @@ Deno.test('BuildHelper', async (t) => {
         minify: true,
       });
 
-      assertEquals(await Deno.readTextFile('tmp/demo/main.bundle.min.js'), code);
+      assertEquals(await Deno.readTextFile(`${tempDir}/demo/main.bundle.min.js`), code);
     });
 
     await t.step('externals option', async () => {
@@ -76,7 +80,7 @@ Deno.test('BuildHelper', async (t) => {
         externals: ['@*', 'jsr:*', 'npm:*', 'https:*', '../../node_modules/*'],
       });
 
-      assertEquals(await Deno.readTextFile('tmp/demo/external.bundle.js'), code);
+      assertEquals(await Deno.readTextFile(`${tempDir}/demo/external.bundle.js`), code);
     });
   });
 });

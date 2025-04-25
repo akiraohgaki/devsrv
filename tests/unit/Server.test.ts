@@ -45,6 +45,7 @@ Deno.test('Development web server', async (t) => {
       hostname,
       port,
       directoryIndex: 'index.html',
+      liveReload: true,
       bundle: true,
       playground: true,
       documentRoot,
@@ -55,6 +56,19 @@ Deno.test('Development web server', async (t) => {
     await sleep(100);
 
     assert((await fetch(origin, { method: 'HEAD' })).ok);
+  });
+
+  await t.step('server-sent events', async () => {
+    let content = '';
+    const eventSource = new EventSource(`${origin}/test.events`);
+    eventSource.addEventListener('message', (event) => {
+      content = event.data;
+      eventSource.close();
+    });
+
+    await sleep(1100);
+
+    assert(content.search('Live reload enabled') !== -1);
   });
 
   await t.step('playground page', async () => {
