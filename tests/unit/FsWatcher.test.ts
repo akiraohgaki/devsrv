@@ -50,6 +50,8 @@ Deno.test('File system watcher', async (t) => {
   const tempFile1 = `${tempDir}/test/file1.txt`;
   const tempFile2 = `${tempDir}/test/file2.txt`;
 
+  console.log(tempDir);
+
   await t.step('starts watching', async () => {
     fsWatcher = new FsWatcher(tempDir);
 
