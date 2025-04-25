@@ -1,5 +1,6 @@
 import type { ServerOptions } from './types.ts';
 
+import { FsWatcher } from './FsWatcher.ts';
 import { BuildHelper } from './BuildHelper.ts';
 import { mimeTypes } from './mimeTypes.ts';
 import playgroundPage from './playground/page.ts';
@@ -35,7 +36,7 @@ export class Server {
 
   #abortController: AbortController | null;
 
-  #fsWatcher: Deno.FsWatcher | null;
+  #fsWatcher: FsWatcher;
 
   #state: {
     message: string | null;
@@ -63,7 +64,10 @@ export class Server {
 
     this.#abortController = null;
 
-    this.#fsWatcher = null;
+    this.#fsWatcher = new FsWatcher(this.#options.documentRoot);
+    this.#fsWatcher.onchange = () => {
+      this.#state.fsChanged = Date.now();
+    };
 
     this.#state = {
       message: this.#options.liveReload ? 'Live reload enabled' : null,
@@ -95,10 +99,10 @@ export class Server {
     this.#server.finished.then(() => {
       this.#server = null;
       this.#abortController = null;
-      this.#stopWatchFs();
+      this.#fsWatcher.stop();
     });
 
-    this.#startWatchFs();
+    this.#fsWatcher.start();
   }
 
   /**
@@ -115,37 +119,6 @@ export class Server {
   }
 
   /**
-   * Starts watch files are changed.
-   */
-  #startWatchFs(): void {
-    if (this.#fsWatcher) {
-      return;
-    }
-
-    Promise.resolve().then(async () => {
-      this.#fsWatcher = Deno.watchFs(this.#options.documentRoot);
-
-      for await (const event of this.#fsWatcher) {
-        if (['create', 'modify', 'rename', 'remove'].includes(event.kind)) {
-          this.#state.fsChanged = Date.now();
-        }
-      }
-    });
-  }
-
-  /**
-   * Stops watch files are changed.
-   */
-  #stopWatchFs(): void {
-    if (!this.#fsWatcher) {
-      return;
-    }
-
-    this.#fsWatcher.close();
-    this.#fsWatcher = null;
-  }
-
-  /**
    * Handles HTTP requests.
    *
    * @param request - Request object
@@ -157,7 +130,7 @@ export class Server {
       console.info(`${request.method} ${path}`);
 
       if (path.endsWith('/.events')) {
-        return this.#response(200, 'text/event-stream; charset=utf-8', this.#eventStream());
+        return this.#response(200, 'text/event-stream', this.#eventStream());
       }
 
       if (path.endsWith('.playground') && this.#options.playground) {
@@ -237,9 +210,12 @@ export class Server {
     const script = `
       <script>
         // This script has automatically inserted by server.
+        const liveReload = ${this.#options.liveReload ? 'true' : 'false'};
         const eventSource = new EventSource('/.events');
         eventSource.addEventListener('message', (event) => console.info(event.data));
-        ${this.#options.liveReload ? "eventSource.addEventListener('fsChanged', () => location.reload());" : ''}
+        if (liveReload) {
+          eventSource.addEventListener('fsChanged', () => location.reload());
+        }
       </script>
     `;
 
@@ -284,9 +260,7 @@ export class Server {
    * @param body - Content body
    */
   #response(status: number, contentType: string, body: BodyInit): Response {
-    const headerForEventStream: HeadersInit = contentType.startsWith('text/event-stream')
-      ? { 'Connection': 'keep-alive' }
-      : {};
+    const headerForEventStream: HeadersInit = contentType === 'text/event-stream' ? { 'Connection': 'keep-alive' } : {};
 
     return new Response(
       body,
