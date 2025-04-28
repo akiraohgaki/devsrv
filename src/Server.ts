@@ -228,13 +228,12 @@ export class Server {
    * Creates ReadableStream object that event stream for Server-Sent Events.
    */
   #eventStream(): ReadableStream<unknown> {
-    const getState = () => this.#state;
+    const state = this.#state;
 
     let intervalId: number | undefined = undefined;
 
     return new ReadableStream({
       start(controller) {
-        const state = getState();
         intervalId = setInterval(() => {
           if (state.message) {
             controller.enqueue(textEncoder.encode(`event: message\ndata: ${state.message}\n\n`));

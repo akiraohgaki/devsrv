@@ -5,8 +5,8 @@
  * ```ts
  * const fsWatcher = new FsWatcher('.');
  *
- * fsWatcher.onchange = () => {
- *   console.log('changed');
+ * fsWatcher.onchange = (event) => {
+ *   console.log(event);
  * }
  *
  * fsWatcher.start();
@@ -57,10 +57,9 @@ export class FsWatcher {
       throw new Error('Watcher is already running.');
     }
 
-    const kinds = ['create', 'modify', 'rename', 'remove'];
-
     Promise.resolve().then(async () => {
       this.#watcher = Deno.watchFs(this.#paths);
+      const kinds = ['create', 'modify', 'rename', 'remove'];
       let timeoutId: number | undefined = undefined;
 
       for await (const event of this.#watcher) {
