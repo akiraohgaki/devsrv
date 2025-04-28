@@ -67,7 +67,6 @@ export class FsWatcher {
           clearTimeout(timeoutId);
           timeoutId = setTimeout(() => {
             this.#onchange(event);
-            timeoutId = undefined;
           }, 50);
         }
       }
