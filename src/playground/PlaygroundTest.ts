@@ -5,7 +5,7 @@ import { PlaygroundLogs } from './PlaygroundLogs.ts';
 const logs = new PlaygroundLogs();
 
 /**
- * PlaygroundTest class for managing tests within the playground page.
+ * Manages tests within the playground page.
  */
 export class PlaygroundTest {
   #options: PlaygroundTestOptions;
@@ -15,7 +15,7 @@ export class PlaygroundTest {
   /**
    * Creates a new instance of the PlaygroundTest class.
    *
-   * @param options - The test options.
+   * @param options - The options for the test.
    */
   constructor(options: Partial<PlaygroundTestOptions>) {
     this.#options = {
@@ -39,7 +39,7 @@ export class PlaygroundTest {
   }
 
   /**
-   * Returns the test state.
+   * The state of the test.
    */
   get state(): PlaygroundTestState {
     return this.#state;

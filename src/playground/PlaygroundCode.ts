@@ -1,5 +1,5 @@
 /**
- * PlaygroundCode class for managing code within the playground page.
+ * Manages code within the playground page.
  */
 export class PlaygroundCode {
   #container: Element;
@@ -12,7 +12,7 @@ export class PlaygroundCode {
   }
 
   /**
-   * Returns the current code content from the playground page.
+   * Gets the current code content from the playground page.
    */
   get(): string {
     return this.#container.textContent ?? '';

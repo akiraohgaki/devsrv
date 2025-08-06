@@ -1,7 +1,7 @@
 import type { PlaygroundTest } from './PlaygroundTest.ts';
 
 /**
- * PlaygroundTest options.
+ * The options for the test.
  */
 export interface PlaygroundTestOptions {
   /**
@@ -10,6 +10,8 @@ export interface PlaygroundTestOptions {
   name: string;
   /**
    * The function to run for the test.
+   *
+   * @param context - Context provided to test functions.
    */
   fn: (context: PlaygroundTestContext) => unknown;
   /**
@@ -19,7 +21,7 @@ export interface PlaygroundTestOptions {
 }
 
 /**
- * Context provided to test functions within the PlaygroundTest.
+ * Context provided to test functions.
  */
 export interface PlaygroundTestContext {
   /**
@@ -35,7 +37,7 @@ export interface PlaygroundTestContext {
 }
 
 /**
- * Represents the state of a test within the PlaygroundTest.
+ * The state of the test.
  */
 export interface PlaygroundTestState {
   /**

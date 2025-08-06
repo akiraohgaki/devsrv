@@ -1,5 +1,5 @@
 /**
- * PlaygroundLogs class for managing logs within the playground page.
+ * Manages logs within the playground page.
  */
 export class PlaygroundLogs {
   #container: Element;
@@ -12,7 +12,7 @@ export class PlaygroundLogs {
   }
 
   /**
-   * Returns the current logs from the playground page.
+   * Gets the current logs from the playground page.
    */
   get(): Array<string> {
     const logs = this.#container.querySelectorAll('[data-content="log"]');

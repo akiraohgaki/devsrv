@@ -5,7 +5,7 @@ import { denoPlugins } from '@luca/esbuild-deno-loader';
 import $ from '@david/dax';
 
 /**
- * Build helper class.
+ * Build helper.
  *
  * @example Basic usage
  * ```ts
@@ -33,7 +33,9 @@ export class BuildHelper {
    * Bundles the scripts.
    *
    * @param entryPoint - The entry point to bundle.
-   * @param options - The bundle options.
+   * @param options - The options for bundler.
+   *
+   * @returns The bundled script code.
    */
   async bundle(
     entryPoint: string,
@@ -63,11 +65,11 @@ export class BuildHelper {
   }
 
   /**
-   * Bundles the scripts and write the result to a file.
+   * Bundles the scripts and write to a file.
    *
    * @param entryPoint - The entry point to bundle.
    * @param outFile - The output file path.
-   * @param options - The bundle options.
+   * @param options - The options for bundler.
    */
   async bundleFile(
     entryPoint: string,
@@ -79,7 +81,7 @@ export class BuildHelper {
   }
 
   /**
-   * Exports the files and directories to a directory.
+   * Exports the files and directories to the output directory.
    *
    * @param outDirectory - The output directory.
    * @param includes - The files and directories to include.
