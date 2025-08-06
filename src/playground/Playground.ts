@@ -48,7 +48,6 @@ export class Playground {
   /**
    * Adds a new log entry to the playground logs.
    *
-   * @remarks
    * This is an alias for Playground.logs.add().
    *
    * @param data - The data to log.
