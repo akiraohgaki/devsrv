@@ -37,10 +37,10 @@ Deno.test('Server', async (t) => {
   });
 });
 
-Deno.test('Development web server', async (t) => {
+Deno.test('Web server features', async (t) => {
   let server: Server;
 
-  await t.step('starts server', async () => {
+  await t.step('starts the server', async () => {
     server = new Server({
       hostname,
       port,
@@ -165,7 +165,7 @@ Deno.test('Development web server', async (t) => {
     assert(content.search('Internal Server Error') !== -1);
   });
 
-  await t.step('stops server', async () => {
+  await t.step('stops the server', async () => {
     server.stop();
 
     await sleep(100);
