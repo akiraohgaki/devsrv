@@ -22,11 +22,11 @@ try {
   console.info('options:', options);
 
   if (!entryPoint) {
-    throw new Error('entryPoint must be set.');
+    throw new Error('"entryPoint" must be set.');
   }
 
   if (!outFile) {
-    throw new Error('outFile must be set.');
+    throw new Error('"outFile" must be set.');
   }
 
   const buildHelper = new BuildHelper();
