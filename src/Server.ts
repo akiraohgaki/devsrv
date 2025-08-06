@@ -187,7 +187,7 @@ export class Server {
   /**
    * Checks if a file exists.
    *
-   * @param path - Path to check.
+   * @param path - Path to the file.
    */
   async #fileExists(path: string): Promise<boolean> {
     let result = false;
@@ -209,7 +209,7 @@ export class Server {
   #insertScript(html: Uint8Array<ArrayBuffer>): Uint8Array<ArrayBuffer> {
     const script = `
       <script>
-        // This script has automatically inserted by server.
+        // This script has been automatically inserted by the server.
         const liveReload = ${this.#options.liveReload ? 'true' : 'false'};
         const eventSource = new EventSource('/.events');
         eventSource.addEventListener('message', (event) => console.info(event.data));
@@ -225,7 +225,7 @@ export class Server {
   }
 
   /**
-   * Creates ReadableStream object that event stream for Server-Sent Events.
+   * Creates a ReadableStream object for Server-Sent Events.
    */
   #eventStream(): ReadableStream<unknown> {
     const state = this.#state;
@@ -252,7 +252,7 @@ export class Server {
   }
 
   /**
-   * Creates Response object.
+   * Creates a Response object.
    *
    * @param status - HTTP status code.
    * @param contentType - Content type.

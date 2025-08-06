@@ -12,7 +12,7 @@ export class PlaygroundLogs {
   }
 
   /**
-   * Gets the current logs from the playground page.
+   * Gets the logs.
    */
   get(): Array<string> {
     const logs = this.#container.querySelectorAll('[data-content="log"]');
@@ -23,7 +23,7 @@ export class PlaygroundLogs {
   }
 
   /**
-   * Adds a new log entry to the playground logs.
+   * Adds a new log entry.
    *
    * @param data - The data to log.
    */
@@ -48,7 +48,7 @@ export class PlaygroundLogs {
   }
 
   /**
-   * Clears the logs within the playground page.
+   * Clears the logs.
    */
   clear(): void {
     this.#container.textContent = '';

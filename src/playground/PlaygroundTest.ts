@@ -76,7 +76,7 @@ export class PlaygroundTest {
   }
 
   /**
-   * Checks if all child tests have passed.
+   * Checks if all child tests passed.
    */
   #areChildrenPassed(): boolean {
     for (const childState of this.#state.children) {
@@ -88,7 +88,7 @@ export class PlaygroundTest {
   }
 
   /**
-   * Outputs a report of the test's state and the state of its children.
+   * Outputs a report on the test’s state and its children’s states.
    *
    * @param state - The state of the test.
    * @param indentationLevel - The indentation level for visual hierarchy.

@@ -29,14 +29,14 @@ export class CliUtil {
   }
 
   /**
-   * An object containing the parsed CLI arguments.
+   * The object that contains the parsed CLI arguments.
    */
   get args(): ReturnType<typeof parseArgs> {
     return this.#args;
   }
 
   /**
-   * Converts a CLI argument value to a boolean value.
+   * Converts a CLI argument value into a boolean.
    *
    * @param value - The value of a CLI argument.
    * @param defaultValue - The default value to return if the argument is invalid or undefined.
@@ -52,7 +52,7 @@ export class CliUtil {
   }
 
   /**
-   * Converts a CLI argument value to a number value.
+   * Converts a CLI argument value into a number.
    *
    * @param value - The value of a CLI argument.
    * @param defaultValue - The default value to return if the argument is invalid or undefined.
@@ -68,7 +68,7 @@ export class CliUtil {
   }
 
   /**
-   * Converts a CLI argument value to a string value.
+   * Converts a CLI argument value into a string.
    *
    * @param value - The value of a CLI argument.
    * @param defaultValue - The default value to return if the argument is invalid or undefined.
@@ -84,7 +84,7 @@ export class CliUtil {
   }
 
   /**
-   * Converts a CLI argument value to an array of strings.
+   * Converts a CLI argument value into an array of strings.
    *
    * @param value - The value of a CLI argument.
    * @param defaultValue - The default value to return if the argument is invalid or undefined.

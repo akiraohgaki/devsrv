@@ -30,10 +30,10 @@ export class BuildHelper {
   constructor() {}
 
   /**
-   * Bundles the scripts.
+   * Bundles the scripts into a single package.
    *
-   * @param entryPoint - The entry point to bundle.
-   * @param options - The options for bundler.
+   * @param entryPoint - The entry point to bundling.
+   * @param options - The options for bundling.
    *
    * @returns The bundled script code.
    */
@@ -65,11 +65,11 @@ export class BuildHelper {
   }
 
   /**
-   * Bundles the scripts and write to a file.
+   * Bundles the scripts into a single package and saves it as a file.
    *
-   * @param entryPoint - The entry point to bundle.
-   * @param outFile - The output file path.
-   * @param options - The options for bundler.
+   * @param entryPoint - The entry point to bundling.
+   * @param outFile - The path to the output file.
+   * @param options - The options for bundling.
    */
   async bundleFile(
     entryPoint: string,
@@ -81,10 +81,10 @@ export class BuildHelper {
   }
 
   /**
-   * Exports the files and directories to the output directory.
+   * Exports files and directories to the output directory.
    *
-   * @param outDirectory - The output directory.
-   * @param includes - The files and directories to include.
+   * @param outDirectory - The path to the output directory.
+   * @param includes - The files and directories that should be included.
    */
   async export(
     outDirectory: string,

@@ -33,7 +33,7 @@ export interface ServerOptions {
 }
 
 /**
- * The options for bundler.
+ * The options for bundling.
  */
 export interface BuildHelperBundleOptions {
   /**

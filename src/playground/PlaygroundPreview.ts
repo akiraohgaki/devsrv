@@ -12,18 +12,18 @@ export class PlaygroundPreview {
   }
 
   /**
-   * Gets the current preview content from the playground page.
+   * Gets the preview content.
    *
    * @param selectors - Optional CSS selectors to query within the preview content.
    *
-   * @returns The element that match the selectors, or the entire preview container if no selectors are specified.
+   * @returns The element that matches the selectors, or the entire preview container if no selectors are specified.
    */
   get(selectors?: string): Element | null {
     return selectors ? this.#container.querySelector(selectors) : this.#container;
   }
 
   /**
-   * Sets the preview content within the playground page.
+   * Sets the preview content.
    *
    * @param content - The content to set.
    */
@@ -47,7 +47,7 @@ export class PlaygroundPreview {
   }
 
   /**
-   * Clears the preview content within the playground page.
+   * Clears the preview content.
    */
   clear(): void {
     this.#container.textContent = '';
