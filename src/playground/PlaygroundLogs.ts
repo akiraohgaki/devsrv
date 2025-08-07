@@ -23,7 +23,7 @@ export class PlaygroundLogs {
   }
 
   /**
-   * Adds a new log entry.
+   * Adds a new log.
    *
    * @param data - The data to log.
    */
@@ -33,10 +33,10 @@ export class PlaygroundLogs {
     const content = data.map((item) => {
       if (item instanceof Error) {
         return item.message;
-      } else if (Array.isArray(item) || (typeof item === 'object' && item !== null)) {
+      } else if (typeof item === 'object' && item !== null) {
         return JSON.stringify(item);
       } else {
-        return '' + item;
+        return String(item);
       }
     }).join(' ');
 

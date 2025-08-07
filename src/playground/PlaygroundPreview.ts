@@ -39,7 +39,7 @@ export class PlaygroundPreview {
         template.content.appendChild(node);
       }
     } else {
-      template.textContent = '' + content;
+      template.textContent = String(content);
     }
 
     this.#container.textContent = '';

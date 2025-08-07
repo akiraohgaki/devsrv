@@ -62,7 +62,7 @@ export class CliUtil {
       return value;
     }
     if (typeof value === 'string') {
-      return parseInt(value, 10) || defaultValue;
+      return Number(value);
     }
     return defaultValue;
   }
@@ -78,7 +78,7 @@ export class CliUtil {
       return value;
     }
     if (typeof value === 'number') {
-      return '' + value;
+      return String(value);
     }
     return defaultValue;
   }
@@ -91,7 +91,7 @@ export class CliUtil {
    */
   toArray(value: unknown, defaultValue: Array<string>): Array<string> {
     if (Array.isArray(value)) {
-      return value.map((item) => '' + item);
+      return value.map((item) => String(item));
     }
     if (typeof value === 'string') {
       return value.split(',').map((item) => item.trim());
