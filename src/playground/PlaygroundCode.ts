@@ -1,5 +1,5 @@
 /**
- * PlaygroundCode class for managing code within the playground page.
+ * Manipulates the code within the playground page.
  */
 export class PlaygroundCode {
   #container: Element;
@@ -12,30 +12,30 @@ export class PlaygroundCode {
   }
 
   /**
-   * Returns the current code content from the playground page.
+   * Gets the code.
    */
   get(): string {
     return this.#container.textContent ?? '';
   }
 
   /**
-   * Sets the code content within the playground page.
+   * Sets the code.
    *
-   * @param code - The code string to set.
+   * @param code - The code to set.
    */
   set(code: string): void {
     this.#container.textContent = code;
   }
 
   /**
-   * Clears the code content within the playground page.
+   * Clears the code.
    */
   clear(): void {
     this.#container.textContent = '';
   }
 
   /**
-   * Runs the code currently present in the playground page.
+   * Runs the code.
    */
   async run(): Promise<void> {
     const code = this.#container.textContent ?? '';

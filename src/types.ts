@@ -1,5 +1,5 @@
 /**
- * Server options.
+ * The options for the server.
  */
 export interface ServerOptions {
   /**
@@ -33,7 +33,7 @@ export interface ServerOptions {
 }
 
 /**
- * Bundler options.
+ * The options for bundling.
  */
 export interface BuildHelperBundleOptions {
   /**

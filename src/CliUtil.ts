@@ -1,7 +1,7 @@
 import { parseArgs } from '@std/cli/parse-args';
 
 /**
- * CLI utility class.
+ * CLI utility.
  *
  * @example Basic usage
  * ```ts
@@ -29,14 +29,14 @@ export class CliUtil {
   }
 
   /**
-   * Returns an object containing the parsed CLI arguments.
+   * The object that contains the parsed CLI arguments.
    */
   get args(): ReturnType<typeof parseArgs> {
     return this.#args;
   }
 
   /**
-   * Converts a CLI argument value to a boolean value.
+   * Converts a CLI argument value into a boolean.
    *
    * @param value - The value of a CLI argument.
    * @param defaultValue - The default value to return if the argument is invalid or undefined.
@@ -52,7 +52,7 @@ export class CliUtil {
   }
 
   /**
-   * Converts a CLI argument value to a number value.
+   * Converts a CLI argument value into a number.
    *
    * @param value - The value of a CLI argument.
    * @param defaultValue - The default value to return if the argument is invalid or undefined.
@@ -62,13 +62,16 @@ export class CliUtil {
       return value;
     }
     if (typeof value === 'string') {
-      return parseInt(value, 10) || defaultValue;
+      const result = Number(value);
+      if (!Number.isNaN(result)) {
+        return result;
+      }
     }
     return defaultValue;
   }
 
   /**
-   * Converts a CLI argument value to a string value.
+   * Converts a CLI argument value into a string.
    *
    * @param value - The value of a CLI argument.
    * @param defaultValue - The default value to return if the argument is invalid or undefined.
@@ -78,20 +81,20 @@ export class CliUtil {
       return value;
     }
     if (typeof value === 'number') {
-      return '' + value;
+      return String(value);
     }
     return defaultValue;
   }
 
   /**
-   * Converts a CLI argument value to an array of strings.
+   * Converts a CLI argument value into an array of strings.
    *
    * @param value - The value of a CLI argument.
    * @param defaultValue - The default value to return if the argument is invalid or undefined.
    */
   toArray(value: unknown, defaultValue: Array<string>): Array<string> {
     if (Array.isArray(value)) {
-      return value.map((item) => '' + item);
+      return value.map((item) => String(item));
     }
     if (typeof value === 'string') {
       return value.split(',').map((item) => item.trim());

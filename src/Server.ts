@@ -10,7 +10,7 @@ const textDecoder = new TextDecoder();
 const buildHelper = new BuildHelper();
 
 /**
- * Server class for serving files.
+ * Web server.
  *
  * @example Basic usage
  * ```ts
@@ -46,7 +46,7 @@ export class Server {
   /**
    * Creates a new instance of the Server class.
    *
-   * @param options - Options for the server.
+   * @param options - The options for the server.
    */
   constructor(options: Partial<ServerOptions> = {}) {
     this.#options = {
@@ -121,7 +121,7 @@ export class Server {
   /**
    * Handles HTTP requests.
    *
-   * @param request - Request object
+   * @param request - Request object.
    */
   async #requestHandler(request: Request): Promise<Response> {
     try {
@@ -187,7 +187,7 @@ export class Server {
   /**
    * Checks if a file exists.
    *
-   * @param path - Path to check
+   * @param path - Path to the file.
    */
   async #fileExists(path: string): Promise<boolean> {
     let result = false;
@@ -204,12 +204,14 @@ export class Server {
   /**
    * Inserts an additional script into HTML page.
    *
-   * @param html - HTML page content
+   * @param html - HTML page content.
+   *
+   * @returns Modified HTML page content.
    */
   #insertScript(html: Uint8Array<ArrayBuffer>): Uint8Array<ArrayBuffer> {
     const script = `
       <script>
-        // This script has automatically inserted by server.
+        // This script has been automatically inserted by the server.
         const liveReload = ${this.#options.liveReload ? 'true' : 'false'};
         const eventSource = new EventSource('/.events');
         eventSource.addEventListener('message', (event) => console.info(event.data));
@@ -225,7 +227,7 @@ export class Server {
   }
 
   /**
-   * Creates ReadableStream object that event stream for Server-Sent Events.
+   * Creates a ReadableStream object for Server-Sent Events.
    */
   #eventStream(): ReadableStream<unknown> {
     const state = this.#state;
@@ -252,11 +254,11 @@ export class Server {
   }
 
   /**
-   * Creates Response object.
+   * Creates a Response object.
    *
-   * @param status - HTTP status code
-   * @param contentType - Content type
-   * @param body - Content body
+   * @param status - HTTP status code.
+   * @param contentType - Content type.
+   * @param body - Content body.
    */
   #response(status: number, contentType: string, body: BodyInit): Response {
     const headerForEventStream: HeadersInit = contentType === 'text/event-stream' ? { 'Connection': 'keep-alive' } : {};

@@ -13,5 +13,5 @@ document.querySelector('[data-action="logs.clear"]')?.addEventListener('click', 
   Playground.logs.clear();
 });
 
-// @ts-ignore because globalThis.Playground has no type definition
+// @ts-ignore because globalThis.Playground lacks a type definition.
 globalThis.Playground = Playground;

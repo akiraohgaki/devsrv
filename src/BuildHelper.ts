@@ -1,3 +1,4 @@
+import type { BuildOptions } from 'esbuild';
 import type { BuildHelperBundleOptions } from './types.ts';
 
 import * as esbuild from 'esbuild';
@@ -5,7 +6,7 @@ import { denoPlugins } from '@luca/esbuild-deno-loader';
 import $ from '@david/dax';
 
 /**
- * Build helper class.
+ * Build helper.
  *
  * @example Basic usage
  * ```ts
@@ -30,10 +31,14 @@ export class BuildHelper {
   constructor() {}
 
   /**
-   * Bundles the scripts.
+   * Bundles the scripts into a single package.
    *
-   * @param entryPoint - The entry point to bundle.
-   * @param options - The bundle options.
+   * @param entryPoint - The entry point to bundling.
+   * @param options - The options for bundling.
+   *
+   * @returns The bundled script code.
+   *
+   * @throws {Error} - If script bundling fails.
    */
   async bundle(
     entryPoint: string,
@@ -52,7 +57,11 @@ export class BuildHelper {
         sourcemap: false,
         treeShaking: true,
         external: options.externals ?? [],
-      });
+      } as BuildOptions);
+
+      if (!result.outputFiles || !result.outputFiles[0]) {
+        throw new Error('Script bundling failed.');
+      }
 
       return result.outputFiles[0].text;
     } catch (exception) {
@@ -63,11 +72,13 @@ export class BuildHelper {
   }
 
   /**
-   * Bundles the scripts and write the result to a file.
+   * Bundles the scripts into a single package and saves it as a file.
    *
-   * @param entryPoint - The entry point to bundle.
-   * @param outFile - The output file path.
-   * @param options - The bundle options.
+   * @param entryPoint - The entry point to bundling.
+   * @param outFile - The path to the output file.
+   * @param options - The options for bundling.
+   *
+   * @throws {Error} - If script bundling fails.
    */
   async bundleFile(
     entryPoint: string,
@@ -79,10 +90,10 @@ export class BuildHelper {
   }
 
   /**
-   * Exports the files and directories to a directory.
+   * Exports files and directories to the output directory.
    *
-   * @param outDirectory - The output directory.
-   * @param includes - The files and directories to include.
+   * @param outDirectory - The path to the output directory.
+   * @param includes - The files and directories that should be included.
    */
   async export(
     outDirectory: string,

@@ -15,7 +15,7 @@ try {
   console.info('includes:', includes);
 
   if (!outDirectory) {
-    throw new Error('outDirectory must be set.');
+    throw new Error('"outDirectory" must be set.');
   }
 
   const buildHelper = new BuildHelper();

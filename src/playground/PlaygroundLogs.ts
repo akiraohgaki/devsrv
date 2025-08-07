@@ -1,5 +1,5 @@
 /**
- * PlaygroundLogs class for managing logs within the playground page.
+ * Manipulates the logs within the playground page.
  */
 export class PlaygroundLogs {
   #container: Element;
@@ -12,7 +12,7 @@ export class PlaygroundLogs {
   }
 
   /**
-   * Returns the current logs from the playground page.
+   * Gets the logs.
    */
   get(): Array<string> {
     const logs = this.#container.querySelectorAll('[data-content="log"]');
@@ -23,7 +23,7 @@ export class PlaygroundLogs {
   }
 
   /**
-   * Adds a new log entry to the playground logs.
+   * Adds a new log.
    *
    * @param data - The data to log.
    */
@@ -33,10 +33,10 @@ export class PlaygroundLogs {
     const content = data.map((item) => {
       if (item instanceof Error) {
         return item.message;
-      } else if (Array.isArray(item) || (typeof item === 'object' && item !== null)) {
+      } else if (typeof item === 'object' && item !== null) {
         return JSON.stringify(item);
       } else {
-        return '' + item;
+        return String(item);
       }
     }).join(' ');
 
@@ -48,7 +48,7 @@ export class PlaygroundLogs {
   }
 
   /**
-   * Clears the logs within the playground page.
+   * Clears the logs.
    */
   clear(): void {
     this.#container.textContent = '';

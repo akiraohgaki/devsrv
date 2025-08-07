@@ -5,7 +5,7 @@ import { PlaygroundLogs } from './PlaygroundLogs.ts';
 const logs = new PlaygroundLogs();
 
 /**
- * PlaygroundTest class for managing tests within the playground page.
+ * Test runner for the playground page.
  */
 export class PlaygroundTest {
   #options: PlaygroundTestOptions;
@@ -15,7 +15,7 @@ export class PlaygroundTest {
   /**
    * Creates a new instance of the PlaygroundTest class.
    *
-   * @param options - The test options.
+   * @param options - The options for the test.
    */
   constructor(options: Partial<PlaygroundTestOptions>) {
     this.#options = {
@@ -39,7 +39,7 @@ export class PlaygroundTest {
   }
 
   /**
-   * Returns the test state.
+   * The state of the test.
    */
   get state(): PlaygroundTestState {
     return this.#state;
@@ -76,7 +76,7 @@ export class PlaygroundTest {
   }
 
   /**
-   * Checks if all child tests have passed.
+   * Checks if all child tests passed.
    */
   #areChildrenPassed(): boolean {
     for (const childState of this.#state.children) {
@@ -88,7 +88,7 @@ export class PlaygroundTest {
   }
 
   /**
-   * Outputs a report of the test's state and the state of its children.
+   * Outputs a report on the test’s state and its children’s states.
    *
    * @param state - The state of the test.
    * @param indentationLevel - The indentation level for visual hierarchy.

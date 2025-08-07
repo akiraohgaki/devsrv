@@ -1,5 +1,5 @@
 /**
- * File system watcher class.
+ * File system watcher.
  *
  * @example Basic usage
  * ```ts
@@ -24,7 +24,7 @@ export class FsWatcher {
   /**
    * Creates a new instance of the FsWatcher class.
    *
-   * @param paths - Paths to watch
+   * @param paths - Paths to watch.
    */
   constructor(paths: string | Array<string>) {
     this.#onchange = () => {};
@@ -34,27 +34,31 @@ export class FsWatcher {
   }
 
   /**
-   * The function to be called when a files are changed.
+   * The function invoked when files are changed.
+   *
+   * @param event - File system event.
    */
   set onchange(handler: (event: Deno.FsEvent) => unknown) {
     this.#onchange = handler;
   }
 
   /**
-   * The function to be called when a files are changed.
+   * The function invoked when files are changed.
+   *
+   * @param event - File system event.
    */
   get onchange(): (event: Deno.FsEvent) => unknown {
     return this.#onchange;
   }
 
   /**
-   * Starts watch for file changes.
+   * Starts watching for file changes.
    *
-   * @throws {Error} - If the watcher is already running.
+   * @throws {Error} - If the file system watcher is already running.
    */
   start(): void {
     if (this.#watcher) {
-      throw new Error('Watcher is already running.');
+      throw new Error('File system watcher is already running.');
     }
 
     Promise.resolve().then(async () => {
@@ -74,13 +78,13 @@ export class FsWatcher {
   }
 
   /**
-   * Stops watch for file changes.
+   * Stops watching for file changes.
    *
-   * @throws {Error} - If the watcher is not running.
+   * @throws {Error} - If the file system watcher is not running.
    */
   stop(): void {
     if (!this.#watcher) {
-      throw new Error('Watcher is not running.');
+      throw new Error('File system watcher is not running.');
     }
 
     this.#watcher.close();

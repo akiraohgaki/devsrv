@@ -4,7 +4,7 @@
 
 A lightweight development web server.
 
-For rapid prototyping and testing of front-end applications.
+Designed for rapid prototyping and testing of front-end applications.
 
 ## Usage
 
