@@ -62,7 +62,10 @@ export class CliUtil {
       return value;
     }
     if (typeof value === 'string') {
-      return Number(value);
+      const result = Number(value);
+      if (!Number.isNaN(result)) {
+        return result;
+      }
     }
     return defaultValue;
   }
