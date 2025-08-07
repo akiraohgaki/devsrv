@@ -1,5 +1,5 @@
 /**
- * Manages logs within the playground page.
+ * Manipulates the logs within the playground page.
  */
 export class PlaygroundLogs {
   #container: Element;

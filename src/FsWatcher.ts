@@ -34,7 +34,7 @@ export class FsWatcher {
   }
 
   /**
-   * The function to be called when files are changed.
+   * The function invoked when files are changed.
    *
    * @param event - File system event.
    */
@@ -43,7 +43,7 @@ export class FsWatcher {
   }
 
   /**
-   * The function to be called when files are changed.
+   * The function invoked when files are changed.
    *
    * @param event - File system event.
    */
@@ -52,7 +52,7 @@ export class FsWatcher {
   }
 
   /**
-   * Starts watching file changes.
+   * Starts watching for file changes.
    *
    * @throws {Error} - If the file system watcher is already running.
    */
@@ -78,7 +78,7 @@ export class FsWatcher {
   }
 
   /**
-   * Stops watching file changes.
+   * Stops watching for file changes.
    *
    * @throws {Error} - If the file system watcher is not running.
    */

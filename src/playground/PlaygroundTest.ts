@@ -5,7 +5,7 @@ import { PlaygroundLogs } from './PlaygroundLogs.ts';
 const logs = new PlaygroundLogs();
 
 /**
- * Manages tests within the playground page.
+ * Test runner for the playground page.
  */
 export class PlaygroundTest {
   #options: PlaygroundTestOptions;

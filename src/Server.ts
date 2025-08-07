@@ -205,6 +205,8 @@ export class Server {
    * Inserts an additional script into HTML page.
    *
    * @param html - HTML page content.
+   *
+   * @returns Modified HTML page content.
    */
   #insertScript(html: Uint8Array<ArrayBuffer>): Uint8Array<ArrayBuffer> {
     const script = `

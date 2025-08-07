@@ -1,5 +1,5 @@
 /**
- * Manages code within the playground page.
+ * Manipulates the code within the playground page.
  */
 export class PlaygroundCode {
   #container: Element;

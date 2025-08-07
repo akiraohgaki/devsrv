@@ -25,28 +25,28 @@ const logs = new PlaygroundLogs();
  */
 export class Playground {
   /**
-   * The internal PlaygroundCode instance.
+   * Manipulates the code.
    */
   static get code(): PlaygroundCode {
     return code;
   }
 
   /**
-   * The internal PlaygroundPreview instance.
+   * Manipulates the preview content.
    */
   static get preview(): PlaygroundPreview {
     return preview;
   }
 
   /**
-   * The internal PlaygroundLogs instance.
+   * Manipulates the logs.
    */
   static get logs(): PlaygroundLogs {
     return logs;
   }
 
   /**
-   * Adds a new log entry to the playground logs.
+   * Adds a new log.
    *
    * This is an alias for Playground.logs.add().
    *
