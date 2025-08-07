@@ -1,3 +1,4 @@
+import type { BuildOptions } from 'esbuild';
 import type { BuildHelperBundleOptions } from './types.ts';
 
 import * as esbuild from 'esbuild';
@@ -36,6 +37,8 @@ export class BuildHelper {
    * @param options - The options for bundling.
    *
    * @returns The bundled script code.
+   *
+   * @throws {Error} - If script bundling fails.
    */
   async bundle(
     entryPoint: string,
@@ -54,7 +57,11 @@ export class BuildHelper {
         sourcemap: false,
         treeShaking: true,
         external: options.externals ?? [],
-      });
+      } as BuildOptions);
+
+      if (!result.outputFiles || !result.outputFiles[0]) {
+        throw new Error('Script bundling failed.');
+      }
 
       return result.outputFiles[0].text;
     } catch (exception) {
@@ -70,6 +77,8 @@ export class BuildHelper {
    * @param entryPoint - The entry point to bundling.
    * @param outFile - The path to the output file.
    * @param options - The options for bundling.
+   *
+   * @throws {Error} - If script bundling fails.
    */
   async bundleFile(
     entryPoint: string,
