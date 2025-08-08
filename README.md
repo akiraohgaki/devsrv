@@ -8,7 +8,7 @@ Designed for rapid prototyping and testing of front-end applications.
 
 ## Usage
 
-### Server
+### Web server
 
 ```sh
 deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
@@ -27,6 +27,22 @@ deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
 | `--bundle <true/false>`        | TypeScript bundling     | true       |
 | `--playground <true/false>`    | Playground page         | true       |
 
+#### Example
+
+Serve static files from the current working directory.
+
+```sh
+deno run -A jsr:@akiraohgaki/devsrv/serve
+```
+
+Serve static files from ./public directory with options specified.
+
+```sh
+deno run -A jsr:@akiraohgaki/devsrv/serve \
+  -h localhost -p 3000 --directory-index=index.html --live-reload=true --bundle=true --playground=true \
+  ./public
+```
+
 ### Build helper program: bundle
 
 ```sh
@@ -43,6 +59,17 @@ deno run jsr:@akiraohgaki/devsrv/bundle [OPTIONS] [ENTRY_POINT] [OUT_FILE]
 | `--minify <true/false>`        | Minification                                                       | false   |
 | `--externals <PACKAGES/PATHS>` | A comma-separated list of packages and paths that allowed wildcard | none    |
 
+#### Example
+
+Bundle scripts into single JavaScript file.
+
+```sh
+deno run -A jsr:@akiraohgaki/devsrv/bundle \
+  --minify=true \
+  --externals='package, jsr:*, npm:*, https:*, ./node_modules/*' \
+  ./src/main.ts ./public/main.bundle.js
+```
+
 ### Build helper program: export
 
 ```sh
@@ -57,36 +84,7 @@ deno run jsr:@akiraohgaki/devsrv/export [OPTIONS] [OUT_DIRECTORY]
 | -------------------------------- | ---------------------------------------------------------- | ------- |
 | `--includes <FILES/DIRECTORIES>` | A comma-separated list of files and directories to include | none    |
 
-### Examples
-
-#### Server
-
-Serve static files from the current working directory.
-
-```sh
-deno run -A jsr:@akiraohgaki/devsrv/serve
-```
-
-Serve static files from ./public directory with options specified.
-
-```sh
-deno run -A jsr:@akiraohgaki/devsrv/serve \
-  -h localhost -p 3000 --directory-index=index.html --live-reload=true --bundle=true --playground=true \
-  ./public
-```
-
-#### bundle
-
-Bundle scripts into single JavaScript file.
-
-```sh
-deno run -A jsr:@akiraohgaki/devsrv/bundle \
-  --minify=true \
-  --externals='package, jsr:*, npm:*, https:*, ./node_modules/*' \
-  ./src/main.ts ./public/main.bundle.js
-```
-
-#### export
+#### Example
 
 Export files into ./public directory.
 
@@ -98,7 +96,7 @@ deno run -A jsr:@akiraohgaki/devsrv/export \
 
 ## Features
 
-### Server
+### Web server
 
 #### Live reload
 
