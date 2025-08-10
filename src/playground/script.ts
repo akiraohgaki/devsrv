@@ -13,5 +13,4 @@ document.querySelector('[data-action="logs.clear"]')?.addEventListener('click', 
   Playground.logs.clear();
 });
 
-// @ts-ignore because globalThis.Playground lacks a type definition.
-globalThis.Playground = Playground;
+(globalThis as unknown as { Playground: Playground }).Playground = Playground;
