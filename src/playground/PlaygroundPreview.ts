@@ -1,5 +1,5 @@
 /**
- * Manipulates the preview content within the playground page.
+ * Manipulate the preview content within the playground page.
  */
 export class PlaygroundPreview {
   #container: Element;
