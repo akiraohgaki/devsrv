@@ -40,7 +40,7 @@ Deno.test('Server', async (t) => {
 Deno.test('Web server features', async (t) => {
   let server: Server;
 
-  await t.step('starts the server', async () => {
+  await t.step('start the server', async () => {
     server = new Server({
       hostname,
       port,
@@ -80,7 +80,7 @@ Deno.test('Web server features', async (t) => {
     assert(content.search('<title>Playground</title>') !== -1);
   });
 
-  await t.step('.bundle.js', async () => {
+  await t.step('TypeScript bundling with .bundle.js', async () => {
     const response = await fetch(`${origin}/main.bundle.js`);
     const content = await response.text();
 
@@ -165,7 +165,7 @@ Deno.test('Web server features', async (t) => {
     assert(content.search('Internal Server Error') !== -1);
   });
 
-  await t.step('stops the server', async () => {
+  await t.step('stop the server', async () => {
     server.stop();
 
     await sleep(100);
