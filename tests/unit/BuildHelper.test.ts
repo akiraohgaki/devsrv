@@ -16,13 +16,13 @@ Deno.test('BuildHelper', async (t) => {
   });
 
   await t.step('export()', async (t) => {
-    await t.step('re-create directory', async () => {
+    await t.step('re-create a directory', async () => {
       await buildHelper.export(`${tempDir}/demo`);
 
       assert((await Deno.stat(`${tempDir}/demo`)).isDirectory);
     });
 
-    await t.step('re-create directory and copy files', async () => {
+    await t.step('re-create a directory and copy files to the directory', async () => {
       await buildHelper.export(`${tempDir}/demo`, ['tests/demo/index.html']);
 
       assert((await Deno.stat(`${tempDir}/demo/index.html`)).isFile);

@@ -10,7 +10,7 @@ const preview = new PlaygroundPreview();
 const logs = new PlaygroundLogs();
 
 /**
- * Manages the playground page.
+ * Manage the playground page.
  *
  * @example Basic usage
  * ```ts
@@ -25,21 +25,21 @@ const logs = new PlaygroundLogs();
  */
 export class Playground {
   /**
-   * Manipulates the code.
+   * PlaygroundCode instance that manipulate the code.
    */
   static get code(): PlaygroundCode {
     return code;
   }
 
   /**
-   * Manipulates the preview content.
+   * PlaygroundPreview instance that manipulate the preview content.
    */
   static get preview(): PlaygroundPreview {
     return preview;
   }
 
   /**
-   * Manipulates the logs.
+   * PlaygroundLogs instance that manipulate the logs.
    */
   static get logs(): PlaygroundLogs {
     return logs;

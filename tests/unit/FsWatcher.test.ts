@@ -38,7 +38,7 @@ Deno.test('FsWatcher', async (t) => {
   });
 });
 
-Deno.test('File system watcher', async (t) => {
+Deno.test('File system watcher features', async (t) => {
   let fsWatcher: FsWatcher;
 
   let counter = 0;
@@ -52,7 +52,7 @@ Deno.test('File system watcher', async (t) => {
 
   console.log(tempDir);
 
-  await t.step('starts watching for file changes', async () => {
+  await t.step('start watching for file changes', async () => {
     fsWatcher = new FsWatcher(tempDir);
 
     fsWatcher.onchange = (event) => {
@@ -137,7 +137,7 @@ Deno.test('File system watcher', async (t) => {
     assertEquals(counter, 5);
   });
 
-  await t.step('stops watching for file changes', async () => {
+  await t.step('stop watching for file changes', async () => {
     fsWatcher.stop();
 
     await Deno.writeTextFile(tempFile0, 'abc');

@@ -30,17 +30,19 @@ Deno.test('CliUtil', async (t) => {
       assertEquals(cliUtil.toBoolean(123, false), false);
       assertEquals(cliUtil.toBoolean('abc', false), false);
       assertEquals(cliUtil.toBoolean(['abc'], false), false);
-      assertEquals(cliUtil.toBoolean(undefined, true), true);
+      assertEquals(cliUtil.toBoolean(undefined, false), false);
     });
   });
 
   await t.step('toNumber()', async (t) => {
     await t.step('from number', () => {
       assertEquals(cliUtil.toNumber(123, 0), 123);
+      assertEquals(cliUtil.toNumber(0.123, 0), 0.123);
     });
 
     await t.step('from string', () => {
       assertEquals(cliUtil.toNumber('123', 0), 123);
+      assertEquals(cliUtil.toNumber('0.123', 0), 0.123);
     });
 
     await t.step('from invalid value', () => {
