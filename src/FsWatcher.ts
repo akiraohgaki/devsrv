@@ -34,6 +34,13 @@ export class FsWatcher {
   }
 
   /**
+   * Whether there is the watcher currently running.
+   */
+  get isRunning(): boolean {
+    return this.#watcher !== null;
+  }
+
+  /**
    * The function invoked when files are changed.
    *
    * @param event - File system event.
