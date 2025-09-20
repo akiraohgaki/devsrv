@@ -20,11 +20,16 @@ Deno.test('Server', async (t) => {
     assert(server);
   });
 
+  await t.step('isRunning', () => {
+    assert(!server.isRunning);
+  });
+
   await t.step('start()', async () => {
     server.start();
 
     await sleep(100);
 
+    assert(server.isRunning);
     assertThrows(() => server.start(), Error);
   });
 
@@ -33,6 +38,7 @@ Deno.test('Server', async (t) => {
 
     await sleep(100);
 
+    assert(!server.isRunning);
     assertThrows(() => server.stop(), Error);
   });
 });

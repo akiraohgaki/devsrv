@@ -15,6 +15,10 @@ Deno.test('FsWatcher', async (t) => {
     assert(fsWatcher);
   });
 
+  await t.step('isRunning', () => {
+    assert(!fsWatcher.isRunning);
+  });
+
   await t.step('onchange()', () => {
     const handler = () => {};
 
@@ -28,12 +32,14 @@ Deno.test('FsWatcher', async (t) => {
 
     await sleep(100);
 
+    assert(fsWatcher.isRunning);
     assertThrows(() => fsWatcher.start(), Error);
   });
 
   await t.step('stop()', () => {
     fsWatcher.stop();
 
+    assert(!fsWatcher.isRunning);
     assertThrows(() => fsWatcher.stop(), Error);
   });
 });
