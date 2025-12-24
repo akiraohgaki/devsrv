@@ -76,6 +76,13 @@ export class Server {
   }
 
   /**
+   * Whether there is the server currently running.
+   */
+  get isRunning(): boolean {
+    return this.#server !== null;
+  }
+
+  /**
    * Starts the server.
    *
    * @throws {Error} - If the server is already running.
