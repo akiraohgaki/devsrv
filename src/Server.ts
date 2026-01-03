@@ -174,10 +174,15 @@ export class Server {
       if (await this.#fileExists(resolvedPath)) {
         const ext = resolvedPath.split('.').pop() ?? '';
         const mimeType = mimeTypes[ext] ?? mimeTypes.bin;
-        let content = await Deno.readFile(resolvedPath);
+
+        let content = null;
 
         if (mimeType === mimeTypes.html) {
-          content = this.#insertScript(content);
+          const fileContent = await Deno.readFile(resolvedPath);
+          content = this.#insertScript(fileContent);
+        } else ‎{‎
+          const file = await Deno.open(resolvedPath);
+          content = file.readable;
         }
 
         return this.#response(200, mimeType, content);
