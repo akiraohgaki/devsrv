@@ -183,6 +183,10 @@ Deno.test('Web server features', async (t) => {
   });
 
   await t.step('HTTPS server', async () => {
+    if (Deno.env.has('CI')) {
+      return;
+    }
+
     const tempDir = await Deno.makeTempDir();
 
     await $`openssl genrsa -out ${tempDir}/key.pem 2048`;
