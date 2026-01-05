@@ -11,6 +11,14 @@ export interface ServerOptions {
    */
   port: number;
   /**
+   * TLS certificate file.
+   */
+  tlsCert: string;
+  /**
+   * TLS key file.
+   */
+  tlsKey: string;
+  /**
    * Directory index file.
    */
   directoryIndex: string;
