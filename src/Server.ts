@@ -180,7 +180,7 @@ export class Server {
         if (mimeType === mimeTypes.html) {
           const fileContent = await Deno.readFile(resolvedPath);
           content = this.#insertScript(fileContent);
-        } else ‎{‎
+        } else {
           const file = await Deno.open(resolvedPath);
           content = file.readable;
         }
