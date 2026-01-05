@@ -22,6 +22,8 @@ deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
 | ------------------------------ | ----------------------- | ---------- |
 | `-h, --host <HOSTNAME>`        | Host name               | 0.0.0.0    |
 | `-p, --port <PORT>`            | Port number             | 3000       |
+| `--tls-cert <FILENAME>`        | TLS certificate file    | none       |
+| `--tls-key <FILENAME>`         | TLS key file            | none       |
 | `--directory-index <FILENAME>` | Directory index file    | index.html |
 | `--live-reload <true/false>`   | Live reload the browser | true       |
 | `--bundle <true/false>`        | TypeScript bundling     | true       |
@@ -39,7 +41,9 @@ Serve static files from ./public directory with options specified.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/serve \
-  -h localhost -p 3000 --directory-index=index.html --live-reload=true --bundle=true --playground=true \
+  -h localhost -p 3000 \
+  --tls-cert=./cert.pem --tls-key=./key.pem \
+  --directory-index=index.html --live-reload=true --bundle=true --playground=true \
   ./public
 ```
 
