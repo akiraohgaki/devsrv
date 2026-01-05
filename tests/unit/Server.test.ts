@@ -1,4 +1,5 @@
 import { assert, assertEquals, assertRejects, assertThrows } from '@std/assert';
+import $ from '@david/dax';
 
 import { Server } from '../../mod.ts';
 
@@ -50,6 +51,8 @@ Deno.test('Web server features', async (t) => {
     server = new Server({
       hostname,
       port,
+      tlsCert: '',
+      tlsKey: '',
       directoryIndex: 'index.html',
       liveReload: true,
       bundle: true,
@@ -177,5 +180,33 @@ Deno.test('Web server features', async (t) => {
     await sleep(100);
 
     await assertRejects(async () => await fetch(origin, { method: 'HEAD' }));
+  });
+
+  await t.step('HTTPS server', async () => {
+    const tempDir = await Deno.makeTempDir();
+
+    await $`openssl genrsa -out ${tempDir}/key.pem 2048`;
+    await $`openssl req -new -key ${tempDir}/key.pem -out ${tempDir}/csr.pem -subj "/C=US/ST=IL/L=Chicago/O=MyOrganization/CN=localhost"`;
+    await $`openssl x509 -req -days 365 -in ${tempDir}/csr.pem -signkey ${tempDir}/key.pem -out ${tempDir}/cert.pem`;
+
+    const anotherPort = port + 2;
+
+    const server = new Server({
+      hostname,
+      port: anotherPort,
+      tlsCert: `${tempDir}/cert.pem`,
+      tlsKey: `${tempDir}/key.pem`,
+      documentRoot,
+    });
+
+    server.start();
+
+    await sleep(100);
+
+    server.stop();
+
+    await sleep(100);
+
+    await $`rm -rf ${tempDir}`;
   });
 });
