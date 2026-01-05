@@ -17,6 +17,8 @@ const buildHelper = new BuildHelper();
  * const server = new Server({
  *   hostname: 'localhost',
  *   port: 3000,
+ *   tlsCert: './cert.pem',
+ *   tlsKey: './key.pem',
  *   directoryIndex: 'index.html',
  *   liveReload: true,
  *   bundle: true,
@@ -52,6 +54,8 @@ export class Server {
     this.#options = {
       hostname: '0.0.0.0',
       port: 3000,
+      tlsCert: '',
+      tlsKey: '',
       directoryIndex: 'index.html',
       liveReload: true,
       bundle: true,
@@ -94,11 +98,20 @@ export class Server {
 
     this.#abortController = new AbortController();
 
+    let tlsOptions = {};
+    if (this.#options.tlsCert && this.#options.tlsKey) {
+      tlsOptions = {
+        cert: Deno.readTextFileSync(this.#options.tlsCert),
+        key: Deno.readTextFileSync(this.#options.tlsKey),
+      };
+    }
+
     this.#server = Deno.serve(
       {
+        signal: this.#abortController.signal,
         port: this.#options.port,
         hostname: this.#options.hostname,
-        signal: this.#abortController.signal,
+        ...tlsOptions,
       },
       this.#requestHandler.bind(this),
     );
