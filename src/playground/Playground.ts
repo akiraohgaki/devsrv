@@ -10,7 +10,7 @@ const preview = new PlaygroundPreview();
 const logs = new PlaygroundLogs();
 
 /**
- * Manage the playground page.
+ * Provides static methods to manage and interact with the playground page.
  *
  * @example Basic usage
  * ```ts
@@ -25,30 +25,28 @@ const logs = new PlaygroundLogs();
  */
 export class Playground {
   /**
-   * PlaygroundCode instance that manipulate the code.
+   * The PlaygroundCode instance for manipulating code.
    */
   static get code(): PlaygroundCode {
     return code;
   }
 
   /**
-   * PlaygroundPreview instance that manipulate the preview content.
+   * The PlaygroundPreview instance for manipulating preview content.
    */
   static get preview(): PlaygroundPreview {
     return preview;
   }
 
   /**
-   * PlaygroundLogs instance that manipulate the logs.
+   * The PlaygroundLogs instance for managing logs.
    */
   static get logs(): PlaygroundLogs {
     return logs;
   }
 
   /**
-   * Adds a new log.
-   *
-   * This is an alias for Playground.logs.add().
+   * Adds a new log entry.
    *
    * @param data - The data to log.
    */

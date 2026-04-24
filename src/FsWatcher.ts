@@ -1,5 +1,5 @@
 /**
- * File system watcher.
+ * Watches for file system changes and triggers a callback.
  *
  * @example Basic usage
  * ```ts
@@ -34,7 +34,7 @@ export class FsWatcher {
   }
 
   /**
-   * Whether there is the watcher currently running.
+   * Whether the watcher currently running.
    */
   get isRunning(): boolean {
     return this.#watcher !== null;
@@ -59,7 +59,7 @@ export class FsWatcher {
   }
 
   /**
-   * Starts watching for file changes.
+   * Starts watching the specified paths for file system changes.
    *
    * @throws {Error} - If the file system watcher is already running.
    */
@@ -85,7 +85,7 @@ export class FsWatcher {
   }
 
   /**
-   * Stops watching for file changes.
+   * Stops watching for file system changes.
    *
    * @throws {Error} - If the file system watcher is not running.
    */
