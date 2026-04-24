@@ -113,7 +113,7 @@ export class Server {
         hostname: this.#options.hostname,
         ...tlsOptions,
       },
-      this.#requestHandler.bind(this),
+      this.#handleRequest.bind(this),
     );
 
     this.#server.finished.then(() => {
@@ -143,7 +143,7 @@ export class Server {
    *
    * @param request - Request object.
    */
-  async #requestHandler(request: Request): Promise<Response> {
+  async #handleRequest(request: Request): Promise<Response> {
     try {
       const path = new URL(request.url).pathname;
 
