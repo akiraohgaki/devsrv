@@ -4,7 +4,7 @@
 
 A lightweight development web server.
 
-Designed for rapid prototyping and testing of front-end applications.
+Designed for the rapid prototyping and testing of front-end applications.
 
 ## Usage
 
@@ -31,7 +31,7 @@ deno run jsr:@akiraohgaki/devsrv/serve [OPTIONS] [DOCUMENT_ROOT]
 
 #### Example
 
-Serve static files from the current working directory.
+Serves static files from the current working directory.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/serve
@@ -65,7 +65,7 @@ deno run jsr:@akiraohgaki/devsrv/bundle [OPTIONS] [ENTRY_POINT] [OUT_FILE]
 
 #### Example
 
-Bundle scripts into single JavaScript file.
+Bundles scripts into a single JavaScript file.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/bundle \
@@ -90,7 +90,7 @@ deno run jsr:@akiraohgaki/devsrv/export [OPTIONS] [OUT_DIRECTORY]
 
 #### Example
 
-Export files into ./public directory.
+Exports files into the ./public directory.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/export \
@@ -104,31 +104,31 @@ deno run -A jsr:@akiraohgaki/devsrv/export \
 
 #### Live reload
 
-Live reload the browser when files in the document root directory are changed.
+Automatically reloads the browser when files in the document root are modified.
 
 #### Request handling
 
-For `*.bundle.js` path: Transpile and bundle TypeScript files into JavaScript on-the-fly.
+For `*.bundle.js` paths: Transpiles and bundles TypeScript files into JavaScript on-the-fly.
 
-For `*.playground` path: Serve the playground page.
+For `*.playground` paths: Serves the playground page.
 
-For other paths: Attempt to serve the file from the document root.
+For other paths: Attempts to serve the file from the document root.
 
-If not found: Serve the default index file.
+If not found: Serves the default directory index file.
 
 #### On-the-fly TypeScript bundling
 
-Allows for seamless integration of TypeScript code into front-end applications.
+Provides seamless integration of TypeScript into front-end applications.
 
-When a browser requests a file with the `.bundle.js` extension, the server dynamically transpiles the corresponding TypeScript file with the same name into JavaScript.
+When a browser requests a file with a `.bundle.js` extension, the server dynamically transpiles the corresponding `.ts` file into JavaScript.
 
-This generated JavaScript is then served as a module, enabling it to be imported into other modules within the application.
+The generated JavaScript is served as an ES module, allowing it to be imported by other scripts.
 
-This approach eliminates the need for pre-building JavaScript bundles and provides a more efficient development workflow.
+This approach eliminates the need for manual pre-bundling and streamlines the development workflow.
 
 #### Code playground
 
-You can test your code instantly.
+Test your code snippets instantly in the browser.
 
 When the request path ends with `.playground`, such as `http://localhost:3000/script.playground`, the playground page will be served to the browser.
 
