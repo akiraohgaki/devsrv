@@ -10,7 +10,7 @@ const textDecoder = new TextDecoder();
 const buildHelper = new BuildHelper();
 
 /**
- * Web server.
+ * A development web server with live-reload and TypeScript bundling features.
  *
  * @example Basic usage
  * ```ts
@@ -80,14 +80,14 @@ export class Server {
   }
 
   /**
-   * Whether there is the server currently running.
+   * Whether the server is currently running.
    */
   get isRunning(): boolean {
     return this.#server !== null;
   }
 
   /**
-   * Starts the server.
+   * Starts the web server and file system watcher.
    *
    * @throws {Error} - If the server is already running.
    */
@@ -113,7 +113,7 @@ export class Server {
         hostname: this.#options.hostname,
         ...tlsOptions,
       },
-      this.#requestHandler.bind(this),
+      this.#handleRequest.bind(this),
     );
 
     this.#server.finished.then(() => {
@@ -126,7 +126,7 @@ export class Server {
   }
 
   /**
-   * Stops the server.
+   * Stops the web server and file system watcher.
    *
    * @throws {Error} - If the server is not running.
    */
@@ -143,7 +143,7 @@ export class Server {
    *
    * @param request - Request object.
    */
-  async #requestHandler(request: Request): Promise<Response> {
+  async #handleRequest(request: Request): Promise<Response> {
     try {
       const path = new URL(request.url).pathname;
 
@@ -210,7 +210,7 @@ export class Server {
   }
 
   /**
-   * Checks if a file exists.
+   * Checks whether a file exists at the specified path.
    *
    * @param path - Path to the file.
    */
@@ -227,7 +227,7 @@ export class Server {
   }
 
   /**
-   * Inserts an additional script into HTML page.
+   * Inserts a live-reload script into an HTML page content.
    *
    * @param html - HTML page content.
    *
@@ -252,7 +252,7 @@ export class Server {
   }
 
   /**
-   * Creates a ReadableStream object for Server-Sent Events.
+   * Creates a ReadableStream for Server-Sent Events (SSE).
    */
   #eventStream(): ReadableStream<unknown> {
     const state = this.#state;
@@ -279,7 +279,7 @@ export class Server {
   }
 
   /**
-   * Creates a Response object.
+   * Creates a Response object with the specified status, content type, and body.
    *
    * @param status - HTTP status code.
    * @param contentType - Content type.

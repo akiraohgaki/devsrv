@@ -1,7 +1,7 @@
 import { parseArgs } from '@std/cli/parse-args';
 
 /**
- * CLI utility.
+ * Provides utilities for parsing and converting command-line arguments.
  *
  * @example Basic usage
  * ```ts
@@ -29,7 +29,7 @@ export class CliUtil {
   }
 
   /**
-   * The object that contains the parsed CLI arguments.
+   * The parsed command-line arguments.
    */
   get args(): ReturnType<typeof parseArgs> {
     return this.#args;

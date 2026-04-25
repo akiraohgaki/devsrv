@@ -6,7 +6,7 @@ import { denoPlugins } from '@luca/esbuild-deno-loader';
 import $ from '@david/dax';
 
 /**
- * Build helper.
+ * Provides helper methods for bundling and exporting files.
  *
  * @example Basic usage
  * ```ts
@@ -31,12 +31,12 @@ export class BuildHelper {
   constructor() {}
 
   /**
-   * Bundles the scripts into a single package.
+   * Bundles script files into a single string.
    *
    * @param entryPoint - The entry point to bundling.
    * @param options - The options for bundling.
    *
-   * @returns The bundled script code.
+   * @returns The bundled source code.
    *
    * @throws {Error} - If script bundling fails.
    */
@@ -72,7 +72,7 @@ export class BuildHelper {
   }
 
   /**
-   * Bundles the scripts into a single package and saves it as a file.
+   * Bundles script files and saves the output to a file.
    *
    * @param entryPoint - The entry point to bundling.
    * @param outFile - The path to the output file.
@@ -90,7 +90,7 @@ export class BuildHelper {
   }
 
   /**
-   * Exports files and directories to the output directory.
+   * Exports specified files and directories to an output directory.
    *
    * @param outDirectory - The path to the output directory.
    * @param includes - The files and directories that should be included.
