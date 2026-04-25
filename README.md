@@ -37,7 +37,7 @@ Serves static files from the current working directory.
 deno run -A jsr:@akiraohgaki/devsrv/serve
 ```
 
-Serve static files from ./public directory with options specified.
+Serves static files from ./public directory with options specified.
 
 ```sh
 deno run -A jsr:@akiraohgaki/devsrv/serve \
