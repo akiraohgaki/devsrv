@@ -98,15 +98,13 @@ deno run -A jsr:@akiraohgaki/devsrv/export \
  ./public
 ```
 
-## Features
+## Web server features
 
-### Web server
-
-#### Live reload
+### Live reload
 
 Automatically reloads the browser when files in the document root are modified.
 
-#### Request handling
+### Request handling
 
 For `*.bundle.js` paths: Transpiles and bundles TypeScript files into JavaScript on-the-fly.
 
@@ -116,7 +114,7 @@ For other paths: Attempts to serve the file from the document root.
 
 If not found: Serves the default directory index file.
 
-#### On-the-fly TypeScript bundling
+### On-the-fly TypeScript bundling
 
 Provides seamless integration of TypeScript into front-end applications.
 
@@ -126,7 +124,7 @@ The generated JavaScript is served as an ES module, allowing it to be imported b
 
 This approach eliminates the need for manual pre-bundling and streamlines the development workflow.
 
-#### Code playground
+### Code playground
 
 Test your code snippets instantly in the browser.
 
