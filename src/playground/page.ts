@@ -8,11 +8,7 @@ export default `<!DOCTYPE html>
     <title>Playground</title>
 
     <style>
-      :root {
-  font-size: 14px;
-}
-
-*,
+      *,
 *::before,
 *::after {
   box-sizing: border-box;
@@ -20,14 +16,15 @@ export default `<!DOCTYPE html>
 
 body {
   margin: 0;
+  padding: 0;
+  font: 1rem/1.5 system-ui;
   background-color: #fefefe;
   color: #333333;
-  font: 1rem/1.5 system-ui;
 }
 
 header,
 section {
-  margin: 4rem;
+  margin: 3rem;
 }
 
 [data-content='code'],
@@ -35,17 +32,18 @@ section {
 [data-content='logs'] {
   margin: 1rem 0;
   padding: 1rem;
-  border: 2px solid #cccccc;
-  border-radius: 5px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
 }
 
 [data-content='code'] {
   background-color: #f8f8f8;
   color: #333333;
+  outline: 3px solid transparent;
   overflow: auto;
 
   &:has(code:focus) {
-    border-color: #0098f1;
+    outline-color: #0098f1;
   }
 
   & code {
@@ -59,25 +57,26 @@ button[data-action] {
   display: inline-block;
   line-height: 1;
   min-width: 6rem;
-  margin: 0.2rem;
+  min-height: 3rem;
+  margin: 0.5rem;
   padding: 0.5rem 1rem;
-  border: 2px solid #cccccc;
-  border-radius: 3px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
   background-color: #fefefe;
   color: #333333;
   font-weight: bold;
   vertical-align: middle;
   white-space: nowrap;
-  outline: none;
+  outline: 3px solid transparent;
   cursor: pointer;
 
   &:hover,
   &:focus-visible {
-    border-color: #0098f1;
+    outline-color: #0098f1;
   }
 
   &:active {
-    border-color: #333333;
+    outline-color: #333333;
   }
 }
 
