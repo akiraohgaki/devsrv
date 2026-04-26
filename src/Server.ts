@@ -147,7 +147,7 @@ export class Server {
     try {
       const path = new URL(request.url).pathname;
 
-      console.info(`${request.method} ${path}`);
+      console.info(`${new Date().toISOString()} ${request.method} ${path}`);
 
       if (path.endsWith('.events')) {
         return this.#response(200, 'text/event-stream', this.#eventStream());
